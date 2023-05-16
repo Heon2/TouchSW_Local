@@ -1,0 +1,36 @@
+; ***********************************************************
+; ******* Scatter-Loading Description File for MTLP  ********
+; ***********************************************************
+LOAD_REGION 0x00000000 0x00014000 
+{
+;;	Code Memory
+;;	SRAM: 80kB (0x14000)
+;;	Application(80K) : 0x00000000~0x00013FFF
+	APP_CODE 0x00000000 0x00013E00 ; 80KB - 512B ; 512B for boot_dump_app
+	{
+		*(VECTOR, +First)
+		startup.o
+		*(APP) ; Fixed!!
+	}
+	
+	APP_CODE2 +0 FIXED
+	{
+		*(InRoot$$Sections)
+		.ANY (+RO)
+	}
+	
+;;	Test Region!!! must delete
+;;	APP_CODE3 0x00010000 FIXED
+;;	{
+;;		*(.TestBinaryVersion)
+;;	}
+
+;;	System Memory
+;;	SRAM: 160kB (0x28000)
+	;App Used : 0x20000000~0x20027FFF
+	RW_SRAM 0x20000000 0x00028000
+	{
+		*(.data_head, +First)  ; Fixed!!
+		.ANY (+RW +ZI)
+	}
+}

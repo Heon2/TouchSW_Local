@@ -1,0 +1,5 @@
+eclipse.preferences.version=1
+encoding//App/app_diag.c=UTF-8
+encoding//App/app_normal.c=UTF-8
+encoding//Hal/hal.c=UTF-8
+encoding//Hal/pwmdrv/pwmdrv.c=UTF-8

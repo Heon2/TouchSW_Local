@@ -1,0 +1,22 @@
+; ***********************************************************
+; ******* Scatter-Loading Description File for MTLP  ********
+; ***********************************************************
+LOAD_REGION 0x00000000 0x3000 
+{
+;;	Bootloader Code Memory
+;;	Flash : 12K
+	BOOT_CODE 0x00000000 0xC00
+ 	{
+  		*(VECTOR, +First)
+  		startup.o
+  		*(InRoot$$Sections) 
+		.ANY (+RO) 
+ 	} 	
+
+;;	Bootloader System Memory
+;;	SRAM: 8kB (0x2000)	
+	BOOT_DATA 0x20003000 0x2000
+	{
+		.ANY (+RW +ZI)		
+	}
+} 

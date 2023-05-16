@@ -1,0 +1,11 @@
+rd /s /q "APPLICATION\bin"
+rd /s /q "APPLICATION\list"
+rd /s /q APPLICATION_USED_BOOT_NoTrim\bin"
+rd /s /q APPLICATION_USED_BOOT_NoTrim\list"
+rd /s /q APPLICATION_USED_BOOT_Trim\bin"
+rd /s /q APPLICATION_USED_BOOT_Trim\list"
+rd /s /q "APPLICATION_CONFIG\bin"
+rd /s /q "APPLICATION_CONFIG\list"
+rd /s /q "APP_SIMPLE_BOOT\bin"
+rd /s /q "APP_SIMPLE_BOOT\list"
+

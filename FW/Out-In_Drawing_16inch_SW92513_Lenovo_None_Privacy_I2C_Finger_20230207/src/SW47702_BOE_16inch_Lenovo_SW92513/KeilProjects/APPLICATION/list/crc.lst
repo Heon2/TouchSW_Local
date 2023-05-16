@@ -1,0 +1,1152 @@
+L 1 "..\..\Tool_BinCvt\BinToolApp\src\crc.c"
+N/******************************************************************************************************
+N * Copyright (c) 2017 - 2025 SiliconWorks LIMITED
+N *
+N * file : crc.c
+N * created on : 23. 2. 2019
+N * Author : mhjang
+N *
+N * All rights reserved.
+N * Redistribution and use in source and binary forms, with or without
+N * modification, are permitted provided that the following conditions are met:
+N * - Redistributions of source code must retain the above copyright
+N *   notice, this list of conditions and the following disclaimer.
+N *   - Redistributions in binary form must reproduce the above copyright
+N *   notice, this list of conditions and the following disclaimer in the
+N *   documentation and/or other materials provided with the distribution.
+N * - Neither the name of SiW nor the names of its contributors may be used
+N *   to endorse or promote products derived from this software without
+N *   specific prior written permission.
+N * *
+N * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+N * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+N * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+N * ARE DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDERS AND CONTRIBUTORS BE
+N * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+N * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+N * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+N * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+N * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+N * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+N * POSSIBILITY OF SUCH DAMAGE.
+N *******************************************************************************************************/
+N
+N#include <stdint.h>
+L 1 "C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h" 1
+N/* Copyright (C) ARM Ltd., 1999,2014 */
+N/* All rights reserved */
+N
+N/*
+N * RCS $Revision$
+N * Checkin $Date$
+N * Revising $Author: agrant $
+N */
+N
+N#ifndef __stdint_h
+N#define __stdint_h
+N#define __ARMCLIB_VERSION 5060019
+N
+N  #ifdef __INT64_TYPE__
+S    /* armclang predefines '__INT64_TYPE__' and '__INT64_C_SUFFIX__' */
+S    #define __INT64 __INT64_TYPE__
+N  #else
+N    /* armcc has builtin '__int64' which can be used in --strict mode */
+N    #define __INT64 __int64
+N    #define __INT64_C_SUFFIX__ ll
+N  #endif
+N  #define __PASTE2(x, y) x ## y
+N  #define __PASTE(x, y) __PASTE2(x, y)
+N  #define __INT64_C(x)  __ESCAPE__(__PASTE(x, __INT64_C_SUFFIX__))
+N  #define __UINT64_C(x)  __ESCAPE__(__PASTE(x ## u, __INT64_C_SUFFIX__))
+N  #if defined(__clang__) || (defined(__ARMCC_VERSION) && !defined(__STRICT_ANSI__))
+X  #if 0L || (1L && !0L)
+N    /* armclang and non-strict armcc allow 'long long' in system headers */
+N    #define __LONGLONG long long
+N  #else
+S    /* strict armcc has '__int64' */
+S    #define __LONGLONG __int64
+N  #endif
+N
+N  #ifndef __STDINT_DECLS
+N  #define __STDINT_DECLS
+N
+N    #undef __CLIBNS
+N
+N    #ifdef __cplusplus
+S      namespace std {
+S          #define __CLIBNS std::
+S          extern "C" {
+N    #else
+N      #define __CLIBNS
+N    #endif  /* __cplusplus */
+N
+N
+N/*
+N * 'signed' is redundant below, except for 'signed char' and if
+N * the typedef is used to declare a bitfield.
+N */
+N
+N    /* 7.18.1.1 */
+N
+N    /* exact-width signed integer types */
+Ntypedef   signed          char int8_t;
+Ntypedef   signed short     int int16_t;
+Ntypedef   signed           int int32_t;
+Ntypedef   signed       __INT64 int64_t;
+Xtypedef   signed       __int64 int64_t;
+N
+N    /* exact-width unsigned integer types */
+Ntypedef unsigned          char uint8_t;
+Ntypedef unsigned short     int uint16_t;
+Ntypedef unsigned           int uint32_t;
+Ntypedef unsigned       __INT64 uint64_t;
+Xtypedef unsigned       __int64 uint64_t;
+N
+N    /* 7.18.1.2 */
+N
+N    /* smallest type of at least n bits */
+N    /* minimum-width signed integer types */
+Ntypedef   signed          char int_least8_t;
+Ntypedef   signed short     int int_least16_t;
+Ntypedef   signed           int int_least32_t;
+Ntypedef   signed       __INT64 int_least64_t;
+Xtypedef   signed       __int64 int_least64_t;
+N
+N    /* minimum-width unsigned integer types */
+Ntypedef unsigned          char uint_least8_t;
+Ntypedef unsigned short     int uint_least16_t;
+Ntypedef unsigned           int uint_least32_t;
+Ntypedef unsigned       __INT64 uint_least64_t;
+Xtypedef unsigned       __int64 uint_least64_t;
+N
+N    /* 7.18.1.3 */
+N
+N    /* fastest minimum-width signed integer types */
+Ntypedef   signed           int int_fast8_t;
+Ntypedef   signed           int int_fast16_t;
+Ntypedef   signed           int int_fast32_t;
+Ntypedef   signed       __INT64 int_fast64_t;
+Xtypedef   signed       __int64 int_fast64_t;
+N
+N    /* fastest minimum-width unsigned integer types */
+Ntypedef unsigned           int uint_fast8_t;
+Ntypedef unsigned           int uint_fast16_t;
+Ntypedef unsigned           int uint_fast32_t;
+Ntypedef unsigned       __INT64 uint_fast64_t;
+Xtypedef unsigned       __int64 uint_fast64_t;
+N
+N    /* 7.18.1.4 integer types capable of holding object pointers */
+N#if __sizeof_ptr == 8
+X#if 4 == 8
+Stypedef   signed       __INT64 intptr_t;
+Stypedef unsigned       __INT64 uintptr_t;
+N#else
+Ntypedef   signed           int intptr_t;
+Ntypedef unsigned           int uintptr_t;
+N#endif
+N
+N    /* 7.18.1.5 greatest-width integer types */
+Ntypedef   signed     __LONGLONG intmax_t;
+Xtypedef   signed     long long intmax_t;
+Ntypedef unsigned     __LONGLONG uintmax_t;
+Xtypedef unsigned     long long uintmax_t;
+N
+N
+N#if !defined(__cplusplus) || defined(__STDC_LIMIT_MACROS)
+X#if !0L || 0L
+N
+N    /* 7.18.2.1 */
+N
+N    /* minimum values of exact-width signed integer types */
+N#define INT8_MIN                   -128
+N#define INT16_MIN                -32768
+N#define INT32_MIN          (~0x7fffffff)   /* -2147483648 is unsigned */
+N#define INT64_MIN  __INT64_C(~0x7fffffffffffffff) /* -9223372036854775808 is unsigned */
+N
+N    /* maximum values of exact-width signed integer types */
+N#define INT8_MAX                    127
+N#define INT16_MAX                 32767
+N#define INT32_MAX            2147483647
+N#define INT64_MAX  __INT64_C(9223372036854775807)
+N
+N    /* maximum values of exact-width unsigned integer types */
+N#define UINT8_MAX                   255
+N#define UINT16_MAX                65535
+N#define UINT32_MAX           4294967295u
+N#define UINT64_MAX __UINT64_C(18446744073709551615)
+N
+N    /* 7.18.2.2 */
+N
+N    /* minimum values of minimum-width signed integer types */
+N#define INT_LEAST8_MIN                   -128
+N#define INT_LEAST16_MIN                -32768
+N#define INT_LEAST32_MIN          (~0x7fffffff)
+N#define INT_LEAST64_MIN  __INT64_C(~0x7fffffffffffffff)
+N
+N    /* maximum values of minimum-width signed integer types */
+N#define INT_LEAST8_MAX                    127
+N#define INT_LEAST16_MAX                 32767
+N#define INT_LEAST32_MAX            2147483647
+N#define INT_LEAST64_MAX  __INT64_C(9223372036854775807)
+N
+N    /* maximum values of minimum-width unsigned integer types */
+N#define UINT_LEAST8_MAX                   255
+N#define UINT_LEAST16_MAX                65535
+N#define UINT_LEAST32_MAX           4294967295u
+N#define UINT_LEAST64_MAX __UINT64_C(18446744073709551615)
+N
+N    /* 7.18.2.3 */
+N
+N    /* minimum values of fastest minimum-width signed integer types */
+N#define INT_FAST8_MIN           (~0x7fffffff)
+N#define INT_FAST16_MIN          (~0x7fffffff)
+N#define INT_FAST32_MIN          (~0x7fffffff)
+N#define INT_FAST64_MIN  __INT64_C(~0x7fffffffffffffff)
+N
+N    /* maximum values of fastest minimum-width signed integer types */
+N#define INT_FAST8_MAX             2147483647
+N#define INT_FAST16_MAX            2147483647
+N#define INT_FAST32_MAX            2147483647
+N#define INT_FAST64_MAX  __INT64_C(9223372036854775807)
+N
+N    /* maximum values of fastest minimum-width unsigned integer types */
+N#define UINT_FAST8_MAX            4294967295u
+N#define UINT_FAST16_MAX           4294967295u
+N#define UINT_FAST32_MAX           4294967295u
+N#define UINT_FAST64_MAX __UINT64_C(18446744073709551615)
+N
+N    /* 7.18.2.4 */
+N
+N    /* minimum value of pointer-holding signed integer type */
+N#if __sizeof_ptr == 8
+X#if 4 == 8
+S#define INTPTR_MIN INT64_MIN
+N#else
+N#define INTPTR_MIN INT32_MIN
+N#endif
+N
+N    /* maximum value of pointer-holding signed integer type */
+N#if __sizeof_ptr == 8
+X#if 4 == 8
+S#define INTPTR_MAX INT64_MAX
+N#else
+N#define INTPTR_MAX INT32_MAX
+N#endif
+N
+N    /* maximum value of pointer-holding unsigned integer type */
+N#if __sizeof_ptr == 8
+X#if 4 == 8
+S#define UINTPTR_MAX UINT64_MAX
+N#else
+N#define UINTPTR_MAX UINT32_MAX
+N#endif
+N
+N    /* 7.18.2.5 */
+N
+N    /* minimum value of greatest-width signed integer type */
+N#define INTMAX_MIN  __ESCAPE__(~0x7fffffffffffffffll)
+N
+N    /* maximum value of greatest-width signed integer type */
+N#define INTMAX_MAX  __ESCAPE__(9223372036854775807ll)
+N
+N    /* maximum value of greatest-width unsigned integer type */
+N#define UINTMAX_MAX __ESCAPE__(18446744073709551615ull)
+N
+N    /* 7.18.3 */
+N
+N    /* limits of ptrdiff_t */
+N#if __sizeof_ptr == 8
+X#if 4 == 8
+S#define PTRDIFF_MIN INT64_MIN
+S#define PTRDIFF_MAX INT64_MAX
+N#else
+N#define PTRDIFF_MIN INT32_MIN
+N#define PTRDIFF_MAX INT32_MAX
+N#endif
+N
+N    /* limits of sig_atomic_t */
+N#define SIG_ATOMIC_MIN (~0x7fffffff)
+N#define SIG_ATOMIC_MAX   2147483647
+N
+N    /* limit of size_t */
+N#if __sizeof_ptr == 8
+X#if 4 == 8
+S#define SIZE_MAX UINT64_MAX
+N#else
+N#define SIZE_MAX UINT32_MAX
+N#endif
+N
+N    /* limits of wchar_t */
+N    /* NB we have to undef and redef because they're defined in both
+N     * stdint.h and wchar.h */
+N#undef WCHAR_MIN
+N#undef WCHAR_MAX
+N
+N#if defined(__WCHAR32) || (defined(__ARM_SIZEOF_WCHAR_T) && __ARM_SIZEOF_WCHAR_T == 4)
+X#if 1L || (0L && __ARM_SIZEOF_WCHAR_T == 4)
+N  #define WCHAR_MIN   0
+N  #define WCHAR_MAX   0xffffffffU
+N#else
+S  #define WCHAR_MIN   0
+S  #define WCHAR_MAX   65535
+N#endif
+N
+N    /* limits of wint_t */
+N#define WINT_MIN (~0x7fffffff)
+N#define WINT_MAX 2147483647
+N
+N#endif /* __STDC_LIMIT_MACROS */
+N
+N#if !defined(__cplusplus) || defined(__STDC_CONSTANT_MACROS)
+X#if !0L || 0L
+N
+N    /* 7.18.4.1 macros for minimum-width integer constants */
+N#define INT8_C(x)   (x)
+N#define INT16_C(x)  (x)
+N#define INT32_C(x)  (x)
+N#define INT64_C(x)  __INT64_C(x)
+N
+N#define UINT8_C(x)  (x ## u)
+N#define UINT16_C(x) (x ## u)
+N#define UINT32_C(x) (x ## u)
+N#define UINT64_C(x) __UINT64_C(x)
+N
+N    /* 7.18.4.2 macros for greatest-width integer constants */
+N#define INTMAX_C(x)  __ESCAPE__(x ## ll)
+N#define UINTMAX_C(x) __ESCAPE__(x ## ull)
+N
+N#endif /* __STDC_CONSTANT_MACROS */
+N
+N    #ifdef __cplusplus
+S         }  /* extern "C" */
+S      }  /* namespace std */
+N    #endif /* __cplusplus */
+N  #endif /* __STDINT_DECLS */
+N
+N  #ifdef __cplusplus
+S    #ifndef __STDINT_NO_EXPORTS
+S      using ::std::int8_t;
+S      using ::std::int16_t;
+S      using ::std::int32_t;
+S      using ::std::int64_t;
+S      using ::std::uint8_t;
+S      using ::std::uint16_t;
+S      using ::std::uint32_t;
+S      using ::std::uint64_t;
+S      using ::std::int_least8_t;
+S      using ::std::int_least16_t;
+S      using ::std::int_least32_t;
+S      using ::std::int_least64_t;
+S      using ::std::uint_least8_t;
+S      using ::std::uint_least16_t;
+S      using ::std::uint_least32_t;
+S      using ::std::uint_least64_t;
+S      using ::std::int_fast8_t;
+S      using ::std::int_fast16_t;
+S      using ::std::int_fast32_t;
+S      using ::std::int_fast64_t;
+S      using ::std::uint_fast8_t;
+S      using ::std::uint_fast16_t;
+S      using ::std::uint_fast32_t;
+S      using ::std::uint_fast64_t;
+S      using ::std::intptr_t;
+S      using ::std::uintptr_t;
+S      using ::std::intmax_t;
+S      using ::std::uintmax_t;
+S    #endif
+N  #endif /* __cplusplus */
+N
+N#undef __INT64
+N#undef __LONGLONG
+N
+N#endif /* __stdint_h */
+N
+N/* end of stdint.h */
+L 34 "..\..\Tool_BinCvt\BinToolApp\src\crc.c" 2
+N#include "..\..\..\Env\env_model_B\customer\FHD_92513_16_Lenovo_NonPrivacy\information.h"
+L 1 "..\..\Hal\system\CMSIS\..\..\..\Env\env_model_B\customer\FHD_92513_16_Lenovo_NonPrivacy\information.h" 1
+N/******************************************************************************************************
+N * Copyright (c) 2017 - 2025 SiliconWorks LIMITED
+N *
+N * file :  information.h
+N * created on : 06. 08. 2021
+N * Author :  mhjang
+N *
+N * All rights reserved.
+N * Redistribution and use in source and binary forms, with or without
+N * modification, are permitted provided that the following conditions are met:
+N * - Redistributions of source code must retain the above copyright
+N *   notice, this list of conditions and the following disclaimer.
+N *   - Redistributions in binary form must reproduce the above copyright
+N *   notice, this list of conditions and the following disclaimer in the
+N *   documentation and/or other materials provided with the distribution.
+N * - Neither the name of SiW nor the names of its contributors may be used
+N *   to endorse or promote products derived from this software without
+N *   specific prior written permission.
+N * *
+N * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+N * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+N * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+N * ARE DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDERS AND CONTRIBUTORS BE
+N * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+N * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+N * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+N * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+N * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+N * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+N * POSSIBILITY OF SUCH DAMAGE.
+N *******************************************************************************************************/
+N
+N#ifndef _INFORMATION_H_
+N#define _INFORMATION_H_
+N
+N
+N/********************************************************************************
+N *                              Customer : DEFAULT                              *
+N ********************************************************************************/
+N#define USED_TRIMCODE_UPDATE_SECURITY_FUNC					(NO)
+N 
+N#define USED_ROIC_DEF										(ROIC_SW92513) // (== SW92400)
+N
+N#define BOE_LENOVO_16_NBPC_PIN_TYPE_R00						(1)
+N
+N
+N#define USED_PCB_PINMAP										(BOE_LENOVO_16_NBPC_PIN_TYPE_R00)
+N
+N#define USED_BEACON_SET_ADJUST								(NO)
+N/*
+N * Use beacon for modulation in dummy LHB
+N */
+N#define USED_DUMMY_LHB_MODULATION							(YES)
+N#define USED_CMUX_OFF										(NO)
+N#define USED_ESD_RECOVERY_SENSING_WITHOUT_MODULATION		(YES)
+N#define USED_ESD_RECOVERY_CHECK_ABNORMAL_PEN_DELTA			(YES)
+N#define USED_ESD_DEBUG										(NO)
+N
+N/*
+N * Support Pen Protocol
+N */
+N//#define PEN_PROTOCOL_MS_PEN
+N//#define PEN_PROTOCOL_WACOM_PEN
+N//#define PEN_PROTOCOL_MSnWACOM_PEN
+N//#define PEN_PROTOCOL_WGP_PEN
+N//#define PEN_PROTOCOL_MSnWGP_PEN
+N//#define PEN_PROTOCOL_WGP_UHD_PEN
+N#define USED_PEN_PROTOCOL								(PEN_PROTOCOL_WGP_PEN)
+N#define USED_WGP_AGIC_PEN								(YES)
+N
+N#if (USED_PEN_PROTOCOL == PEN_PROTOCOL_MSnWACOM_PEN || USED_PEN_PROTOCOL == PEN_PROTOCOL_MSnWGP_PEN)
+X#if ((PEN_PROTOCOL_WGP_PEN) == PEN_PROTOCOL_MSnWACOM_PEN || (PEN_PROTOCOL_WGP_PEN) == PEN_PROTOCOL_MSnWGP_PEN)
+N	#define DEF_PEN_LOCAL_INDEX_SET_BIT_MASK_MSPen				(0x0150)
+N	#define DEF_PEN_LOCAL_INDEX_SET_BIT_MASK_AITPen				(0x0288)
+N	#define DEF_PEN_LOCAL_INDEX_SET_BIT_MASK_WGPPen				(0x0444)
+N#else /* (USED_PEN_PROTOCOL == PEN_PROTOCOL_MSnWACOM_PEN || USED_PEN_PROTOCOL == PEN_PROTOCOL_MSnWGP_PEN) */
+S	#if (USED_PEN_PROTOCOL == PEN_PROTOCOL_WGP_PEN)
+S		#if (USED_ROIC_DEF == ROIC_SW92510 || USED_ROIC_DEF == ROIC_SW92508 || USED_ROIC_DEF == ROIC_SW92509)
+S			#define DEF_PEN_LOCAL_INDEX_SET_BIT_MASK_Active		(0x0C8D)
+S			#define DEF_PEN_LOCAL_INDEX_SET_BIT_MASK_Idle		(0x0000)
+S		#else
+S			#define DEF_PEN_LOCAL_INDEX_SET_BIT_MASK_Active		(0x0445)
+S			#define DEF_PEN_LOCAL_INDEX_SET_BIT_MASK_Idle		(0x0048)
+S		#endif
+S	#elif (USED_PEN_PROTOCOL == PEN_PROTOCOL_WGP_UHD_PEN)
+S		#define DEF_PEN_LOCAL_INDEX_SET_BIT_MASK_Active			(0x0054)
+S		#define DEF_PEN_LOCAL_INDEX_SET_BIT_MASK_Idle			(0x0054)
+S	#elif (USED_PEN_PROTOCOL == PEN_PROTOCOL_MS_PEN)
+S		#define DEF_PEN_LOCAL_INDEX_SET_BIT_MASK_Active			(0x0151)
+S		#define DEF_PEN_LOCAL_INDEX_SET_BIT_MASK_Idle			(0x0048)
+S	#endif
+N#endif /* (USED_PEN_PROTOCOL == PEN_PROTOCOL_MSnWACOM_PEN || USED_PEN_PROTOCOL == PEN_PROTOCOL_MSnWGP_PEN) */
+N
+N#define USED_SPI_NBIT_TRANSMODE							(NO)
+N#define SPI_TRANSFER_BIT_NUM							(16)
+N
+N#define USED_TOUCH_TUNING_PROCESS						(NO)
+N#define USED_DO_NOT_TOUCH_ONLY_DISPLAY					(NO)
+N#define USED_DO_NOT_TOUCH_REPORT						(NO)
+N#define USED_DO_NOT_FINGER_TOUCH_REPORT					(NO)
+N#define USED_ZERO_FINGER_RAWDATA_DONOT_PEN_PROCESS		(NO)
+N#if USED_ZERO_FINGER_RAWDATA_DONOT_PEN_PROCESS
+X#if (NO)
+S#define ZERO_FINGER_RAWDATA_MASK_NUM					(32)
+S#define ZERO_FINGER_RAWDATA_MASK_COL_NUM				(3) // (ROW MAX / 32) + ((ROW_MAX % 32) > 0 ? 1 : 0)
+N#endif /* USED_ZERO_FINGER_RAWDATA_DONOT_PEN_PROCESS */
+N#define USED_FINGER_DYNAMIC_MUX_SCAN_ORDER				(NO)
+N#define USED_PEN_DATA_AFE_GAIN_OTHER_SET				(NO)
+N#if USED_PEN_DATA_AFE_GAIN_OTHER_SET
+X#if (NO)
+S	#define DEF_PEN_LOCAL_DATA_GAIN_SET_BIT_MASK_Idle			(0x0829)
+N#endif /* USED_PEN_DATA_AFE_GAIN_OTHER_SET */
+N
+N#define USED_ONLY_LOCAL_MODE							(NO || (USED_PEN_PROTOCOL == PEN_PROTOCOL_MSnWGP_PEN))//(NO)
+N#define USED_ONLY_FULL_MODE								(NO)
+N#define USED_ONLY_IDLE_MODE								(NO)
+N#define USED_ONLY_LOCAL_IDLE_MODE						(NO)
+N#define USED_ONLY_S3_MODE								(NO)
+N#define USED_IDLE_FINGER_EVEN_ODD						(YES)
+N
+N#define USED_SMT_OP_MODE								(YES)
+N#define USED_IDLE_MODE_CONTROL							(YES && (!USED_CMUX_OFF))
+N#define USED_ENTER_IDLE_REAL_TIME_CHECK					(YES & USED_IDLE_MODE_CONTROL)
+N#define USED_IDLE_MODE_30Hz_CONTROL						(NO)
+N#define USED_IDLE_MODE_20Hz_CONTROL						(NO)
+N#if USED_IDLE_FINGER_EVEN_ODD
+X#if (YES)
+S	#define USED_IDLE_NI_SENSING_MUX_NUM					(2)
+N#else
+N	#define USED_IDLE_NI_SENSING_MUX_NUM					(1)
+N#endif
+N#define USED_REFERENCE_INIT_IDLE_MODE_ENTER				(YES & USED_IDLE_MODE_CONTROL)
+N#define USED_IDLE_LOW_POWER								(NO & USED_IDLE_MODE_CONTROL)
+N#define USED_FAST_SWITCH_IDLE_TO_ACTIVE					(YES & USED_IDLE_MODE_CONTROL)
+N#define USED_FULLSCAN_SWITCH_IDLE_TO_ACTIVE				(YES & USED_IDLE_MODE_CONTROL)
+N#define DEF_FULLSCAN_SWITCH_IDLE_LHB_IDX				(9) // Switching as the fullscan at the LHB index of same idle frame.
+N
+N#define USED_LOCAL_IDLE_MODE_CONTROL					(NO)
+N#define USED_LOCAL_IDLE_PEN_OTHER_CONTROL				(NO && USED_LOCAL_IDLE_MODE_CONTROL)
+N#if USED_LOCAL_IDLE_MODE_CONTROL
+X#if (NO)
+S#define USED_LOCAL_IDLE_30Hz							(YES)
+N#endif /* USED_LOCAL_IDLE_MODE_CONTROL */
+N
+N#define USED_NOISE_HOPPING_FREQ								(YES && (!USED_CMUX_OFF))
+N#define USE_FORCE_FREQ_HOPPING								(NO && USED_NOISE_HOPPING_FREQ)
+N#if USE_FORCE_FREQ_HOPPING
+X#if (NO && (YES && (!(NO))))
+S	#define USED_IDLE_MODE_CONTROL							(NO)
+N#endif /* USE_FORCE_FREQ_HOPPING */
+N#define USE_FREQ_HOPPIG_DEBUG								(NO && USED_NOISE_HOPPING_FREQ)
+N#define USE_FREQ_HOPPING_BASELINE_CONTI_UPDATE				(YES && USED_NOISE_HOPPING_FREQ && (!USE_FORCE_FREQ_HOPPING))
+N#define HOPP_BASELINE_CONTI_ON_OFF_CONTROL_START_CNT_THD	(20)
+N#define DEF_FREQ_HOPPING_BASELINE_UPDATE_CHECK_CNT_THD		(100)
+N#define DEF_FREQ_HOPPING_BASELINE_UPDATE_CONTI_CNT_THD		(10)
+N
+N#define USED_START_TIME_OUT_CHECK						(YES)
+N#define USED_START_TIME_OUT_COUNT						(100)
+N
+N#define USED_TSYNC2_INPUT_FROM_TCON						(NO)
+N
+N#define USED_TPIC_MUXEN_ON_OFF_CONTROL					(YES)
+N#define USED_TPIC_MUXEN_2_ON_OFF_CONTROL				(NO)
+N#define USED_TPIC_MUXEN_OFF_TIMING_LAST_PWM				(YES)
+N#define TPIC_MUXEN_ON_OFF_CONTROL_START_CNT_THD			(20)
+N#define USED_TPIC_MUXEN_ON_OFF_CONTROL_DISABLE_DATAREAD	(YES & USED_TPIC_MUXEN_ON_OFF_CONTROL)
+N
+N#if (USED_PEN_PROTOCOL == PEN_PROTOCOL_MSnWACOM_PEN || USED_PEN_PROTOCOL == PEN_PROTOCOL_MSnWGP_PEN)
+X#if ((PEN_PROTOCOL_WGP_PEN) == PEN_PROTOCOL_MSnWACOM_PEN || (PEN_PROTOCOL_WGP_PEN) == PEN_PROTOCOL_MSnWGP_PEN)
+N	#define DEF_TPIC_MUX_EN_SET_BIT_MASK_MSPen				(0x0000)
+N	#define DEF_TPIC_MUX_EN_SET_BIT_MASK_AITPen				(0x0000)
+N	#define DEF_TPIC_MUX_EN_SET_BIT_MASK_WGPPen				(0x0000)
+N#else /* (USED_PEN_PROTOCOL == PEN_PROTOCOL_MSnWACOM_PEN || USED_PEN_PROTOCOL == PEN_PROTOCOL_MSnWGP_PEN) */
+S	#if (USED_PEN_PROTOCOL == PEN_PROTOCOL_WGP_PEN)
+S		#if (USED_ROIC_DEF == ROIC_SW92510 || USED_ROIC_DEF == ROIC_SW92508)
+S			#define DEF_TPIC_MUX_EN_SET_BIT_MASK_Full		(0x03BD)
+S			#define DEF_TPIC_MUX_EN_SET_BIT_MASK_Local		(0x03BD)
+S			#if USED_FULLSCAN_SWITCH_IDLE_TO_ACTIVE
+S				#define DEF_TPIC_MUX_EN_SET_BIT_MASK_Idle		(0x0020)
+S			#else /* USED_FULLSCAN_SWITCH_IDLE_TO_ACTIVE */
+S				#define DEF_TPIC_MUX_EN_SET_BIT_MASK_Idle		(0x0200)
+S			#endif /* USED_FULLSCAN_SWITCH_IDLE_TO_ACTIVE */
+S		#else
+S			#if USED_DUMMY_LHB_MODULATION
+S				#define DEF_TPIC_MUX_EN_SET_BIT_MASK_Full		(0xFFFF)
+S				#define DEF_TPIC_MUX_EN_SET_BIT_MASK_Local		(0xFFF7)
+S				#if USED_LOCAL_IDLE_30Hz
+S					#define DEF_TPIC_MUX_EN_SET_BIT_MASK_Idle		(0x18002)
+S				#else
+S					#define DEF_TPIC_MUX_EN_SET_BIT_MASK_Idle		(0xFFFF)
+S				#endif
+S			#else
+S				#define DEF_TPIC_MUX_EN_SET_BIT_MASK_Full		(0xF1F1)
+S				#define DEF_TPIC_MUX_EN_SET_BIT_MASK_Local		(0xFFF7)
+S				#if USED_LOCAL_IDLE_30Hz
+S					#define DEF_TPIC_MUX_EN_SET_BIT_MASK_Idle		(0x18002)
+S				#else
+S					#define DEF_TPIC_MUX_EN_SET_BIT_MASK_Idle		(0x0100)
+S				#endif
+S			#endif
+S		#endif
+S	#elif (USED_PEN_PROTOCOL == PEN_PROTOCOL_WGP_UHD_PEN)
+S		#define DEF_TPIC_MUX_EN_SET_BIT_MASK_Full		(0x0000)
+S		#define DEF_TPIC_MUX_EN_SET_BIT_MASK_Local		(0x0000)
+S		#define DEF_TPIC_MUX_EN_SET_BIT_MASK_Idle		(0x0000)
+S	#elif (USED_PEN_PROTOCOL == PEN_PROTOCOL_MS_PEN)
+S		#define DEF_TPIC_MUX_EN_SET_BIT_MASK_Full		(0x0000)
+S		#define DEF_TPIC_MUX_EN_SET_BIT_MASK_Local		(0x0000)
+S		#define DEF_TPIC_MUX_EN_SET_BIT_MASK_Idle		(0x0000)
+S	#endif
+N#endif /* (USED_PEN_PROTOCOL == PEN_PROTOCOL_MSnWACOM_PEN || USED_PEN_PROTOCOL == PEN_PROTOCOL_MSnWGP_PEN) */
+N
+N#define USED_GPIO_UPLINK_LEVEL_CONTROL					(NO)
+N#if USED_GPIO_UPLINK_LEVEL_CONTROL
+X#if (NO)
+S	#define DEF_UPLINK_HW_CONTROL							(1)
+S	#define DEF_UPLINK_SW_CONTROL							(2)
+S	#define DEF_UPLINK_CONTROL_OPERATION					(DEF_UPLINK_SW_CONTROL)
+N#endif /* USED_GPIO_UPLINK_LEVEL_CONTROL */
+N
+N#if (USED_PEN_PROTOCOL == PEN_PROTOCOL_MSnWACOM_PEN || USED_PEN_PROTOCOL == PEN_PROTOCOL_MSnWGP_PEN)
+X#if ((PEN_PROTOCOL_WGP_PEN) == PEN_PROTOCOL_MSnWACOM_PEN || (PEN_PROTOCOL_WGP_PEN) == PEN_PROTOCOL_MSnWGP_PEN)
+N	#define DEF_UPLINK_CTRL_SET_BIT_MASK_MSPen				(0x0202)
+N	#define DEF_UPLINK_CTRL_SET_BIT_MASK_WGPPen				(0x0002)
+N#else /* (USED_PEN_PROTOCOL == PEN_PROTOCOL_MSnWACOM_PEN || USED_PEN_PROTOCOL == PEN_PROTOCOL_MSnWGP_PEN) */
+S	#if (USED_PEN_PROTOCOL == PEN_PROTOCOL_WGP_PEN || USED_PEN_PROTOCOL == PEN_PROTOCOL_WGP_UHD_PEN)
+S		#define DEF_UPLINK_CTRL_SET_BIT_MASK_WGPPen		(0x0002)
+S	#elif (USED_PEN_PROTOCOL == PEN_PROTOCOL_MS_PEN)
+S		#define DEF_UPLINK_CTRL_SET_BIT_MASK_MSPen		(0x0202)
+S	#endif
+N#endif /* (USED_PEN_PROTOCOL == PEN_PROTOCOL_MSnWACOM_PEN || USED_PEN_PROTOCOL == PEN_PROTOCOL_MSnWGP_PEN) */
+N
+N#define USED_TPIC_PENEN_ON_OFF_CONTROL					(NO)
+N#define USED_TPIC_PENEN_OFF_TIMING_LAST_PWM				(YES)
+N#define TPIC_PENEN_ON_OFF_CONTROL_START_CNT_THD			(20)
+N#define USED_TPIC_PENEN_ON_OFF_CONTROL_DISABLE_DATAREAD	(YES & USED_TPIC_MUXEN_ON_OFF_CONTROL)
+N
+N#if (USED_PEN_PROTOCOL == PEN_PROTOCOL_MSnWACOM_PEN || USED_PEN_PROTOCOL == PEN_PROTOCOL_MSnWGP_PEN)
+X#if ((PEN_PROTOCOL_WGP_PEN) == PEN_PROTOCOL_MSnWACOM_PEN || (PEN_PROTOCOL_WGP_PEN) == PEN_PROTOCOL_MSnWGP_PEN)
+N	#define DEF_TPIC_PEN_EN_SET_BIT_MASK_MSPen				(0x0000)
+N	#define DEF_TPIC_PEN_EN_SET_BIT_MASK_AITPen				(0x0000)
+N	#define DEF_TPIC_PEN_EN_SET_BIT_MASK_WGPPen				(0x0000)
+N#else /* (USED_PEN_PROTOCOL == PEN_PROTOCOL_MSnWACOM_PEN || USED_PEN_PROTOCOL == PEN_PROTOCOL_MSnWGP_PEN) */
+S	#if (USED_PEN_PROTOCOL == PEN_PROTOCOL_WGP_PEN)
+S		#if (USED_ROIC_DEF == ROIC_SW92510 || USED_ROIC_DEF == ROIC_SW92508)
+S			#define DEF_TPIC_PEN_EN_SET_BIT_MASK_Full		(0x0647)
+S			#define DEF_TPIC_PEN_EN_SET_BIT_MASK_Local		(0xE5E7)
+S			#define DEF_TPIC_PEN_EN_SET_BIT_MASK_Idle		(0x0048)
+S		#else
+S			#define DEF_TPIC_PEN_EN_SET_BIT_MASK_Full		(0xF1F1)
+S			#define DEF_TPIC_PEN_EN_SET_BIT_MASK_Local		(0xE5E7)
+S			#define DEF_TPIC_PEN_EN_SET_BIT_MASK_Idle		(0x0048)
+S		#endif
+S	#elif (USED_PEN_PROTOCOL == PEN_PROTOCOL_WGP_UHD_PEN)
+S		#define DEF_TPIC_PEN_EN_SET_BIT_MASK_Full		(0x0000)
+S		#define DEF_TPIC_PEN_EN_SET_BIT_MASK_Local		(0x0000)
+S		#define DEF_TPIC_PEN_EN_SET_BIT_MASK_Idle		(0x0000)
+S	#elif (USED_PEN_PROTOCOL == PEN_PROTOCOL_MS_PEN)
+S		#define DEF_TPIC_PEN_EN_SET_BIT_MASK_Full		(0x0000)
+S		#define DEF_TPIC_PEN_EN_SET_BIT_MASK_Local		(0x0000)
+S		#define DEF_TPIC_PEN_EN_SET_BIT_MASK_Idle		(0x0000)
+S	#endif
+N#endif /* (USED_PEN_PROTOCOL == PEN_PROTOCOL_MSnWACOM_PEN || USED_PEN_PROTOCOL == PEN_PROTOCOL_MSnWGP_PEN) */
+N
+N#define DEF_ECLK_DRIVING_STRENGTH						(GPIO_DRIVE_STR_16mA)
+N#define USED_ECLK_ON_OFF_CONTROL						(YES)
+N#define ECLK_ON_OFF_CONTROL_START_CNT_THD				(20)
+N#define USED_ECLK_FRQ_ADJUST_CONTROL					(YES & USED_ECLK_ON_OFF_CONTROL)
+N#define ECLK_FRQ_ADJUST_DISPLAY_DIV						(11)//(3)
+N#define USED_ECLK_ON_OFF_CONTROL_DISABLE_DATAREAD		(YES & USED_ECLK_ON_OFF_CONTROL)
+N#define ECLK_NEED_DURING_MSPI_OPERATION					(NO & USED_ECLK_ON_OFF_CONTROL)
+N
+N#if USED_ESD_RECOVERY_SENSING_WITHOUT_MODULATION
+X#if (YES)
+S	#define DEF_ECLK_EN_SET_BIT_MASK_Full					(0xF9F9)
+S	#define DEF_ECLK_EN_SET_BIT_MASK_Local					(0xFFF7)
+S	#define DEF_ECLK_EN_SET_BIT_MASK_Idle					(0x0100)
+N#else
+N	#define DEF_ECLK_EN_SET_BIT_MASK_Full					(0xF1F1)
+N	#define DEF_ECLK_EN_SET_BIT_MASK_Local					(0xFFF7)
+N	#define DEF_ECLK_EN_SET_BIT_MASK_Idle					(0x0100)
+N#endif
+N
+N#define USED_TOUCH_REPORT_ON_OFF_CONTROL					(YES)
+N#define TOUCH_REPORT_ON_OFF_CONTROL_START_CNT_THD			(20)
+N#define USED_TOUCH_REPORT_ON_OFF_CONTROL_DISABLE_DATAREAD	(YES & USED_TOUCH_REPORT_ON_OFF_CONTROL)
+N
+N#define USED_FORCE_S3_MODE_OPER							(NO)
+N#define USED_GPIO_TEST_HANDSHAKE						(NO)
+N
+N#define PWMDRV_USED_FREQUENCY						(PWMDRV_FREQUENCY_91K)
+N#define PLL_OUT_CLOCK_SPEED							(PLL_OUT_CLOCK_90MHz)
+N
+N#define USED_OPERATION_STAND_ALONE					(NO)
+N#define USED_OPERATION_STAND_ALONE_DISPLAY_ON		(NO)
+N
+N#define USED_SHARP_SPECIFIC_PROTOCOL				(NO)
+N
+N#define USED_PEN_MODE_OPERATION						(NO)
+N#define USED_INIT_PEN_MODE							(YES && USED_PEN_MODE_OPERATION)
+N#define USED_PEN_ID_GET_FUNCTION					(YES && USED_PEN_MODE_OPERATION)
+N
+N#define USED_S3_MODE_FUNCTION						(NO && (!USED_PEN_MODE_OPERATION))
+N#define USED_LPWG_MCU_SLEEP							(NO && (!USED_PEN_MODE_OPERATION))
+N#define USED_S3_ALL_MUX_SHORT						(NO)
+N
+N#define USED_PWM_GATE_CONTROL						(NO)
+N#define USED_TP_RST_OPERATION						(NO)
+N#define USED_TP_LCD_ON_OPERATION					(YES && (USED_OPERATION_STAND_ALONE == NO))
+N#define USED_TP_RSTnLCDON_DOUBLE_OPERATION			(USED_TP_RST_OPERATION && USED_TP_LCD_ON_OPERATION)
+N
+N#define USED_I2C_STOP_STATE_CHECK					(YES)
+N
+N#define USED_FINGER_OTHER_PWM_MUX_NUM_LAST_LHB		(NO)
+N#if USED_FINGER_OTHER_PWM_MUX_NUM_LAST_LHB
+X#if (NO)
+S	#define DEF_FINGER_PWM_OTHER_NUM_SET_BIT_MASK_Full		(0x8080)
+S	#define DEF_FINGER_PWM_NORMAL_NUM_SET_BIT_MASK_Full		(0x0101)
+S	#define DEF_FINGER_PWM_OTHER_NUM_SET_BIT_MASK_Local		(0x0800)
+S	#define DEF_FINGER_PWM_NORMAL_NUM_SET_BIT_MASK_Local	(0x1000)
+N#endif /* USED_FINGER_OTHER_PWM_MUX_NUM_LAST_LHB */
+N
+N#define USED_ESD_RECOERY_DETECTION_RAWDATA_STUCK			(YES)
+N#define DEF_ROIC_SENSING_BUFFER_NUM							(3)
+N#define DEF_USED_AFE_1_CHECK_ROW_INDEX						(0)
+N#define DEF_USED_AFE_1_CHECK_COL_INDEX						(0)
+N#define DEF_USED_AFE_2_CHECK_ROW_INDEX						(2)
+N#define DEF_USED_AFE_2_CHECK_COL_INDEX						(2)
+N#define USED_ESD_RECOERY_DETECTION_ROIC_Abnoraml			(NO)
+N#define USED_ESD_RECOVERY_GHOST_TOUCH_DELTA_PATTERN			(YES)
+N#define USED_ESD_RECOVERY_RESET_AT_REBASE					(YES)
+N#define USED_ESD_RECOVERY_RESET_TOUCH_AT_FIRST_FRAME		(YES)
+N#define DEF_ESD_RECOVERY_RESET_TOUCH_AT_FIRST_FRAME_CNT_THD	(10)
+N#define DEF_ESD_DEBUG_RAWDATA_BEFORE_LINEFILTER				(YES)
+N//#define USED_ESD_RECOVERY_SENSING_WITHOUT_MODULATION		(YES)
+N#if USED_ESD_RECOVERY_SENSING_WITHOUT_MODULATION
+X#if (YES)
+S	#define DEF_ESD_SCAN_POS_NEG_ACCUM_BLOCK_THD				(30)
+S	#define DEF_ESD_SCAN_REPORT_SKIP_DELTASUM_THD				(15000)
+S	#define DEF_ESD_SCAN_REPORT_SKIP_CNT_THD					(10)
+N#endif /* USED_ESD_RECOVERY_SENSING_WITHOUT_MODULATION */
+N#if USED_ESD_RECOVERY_CHECK_ABNORMAL_PEN_DELTA
+X#if (YES)
+S	#define DEF_ESD_CHECK_ABNORMAL_PEN_DELTA_RESET_THD			(3)
+S	#define DEF_ESD_CHECK_ABNORMAL_PEN_DELTA_FRAME_NUM			(10)
+S	#define DEF_ESD_CHECK_ABNORMAL_PEN_DELTA_SUM_THD			(20000)
+N#endif /*USED_ESD_RECOVERY_CHECK_ABNORMAL_PEN_DELTA*/
+N
+N/*******************************************************************
+N * Custom Specific Define
+N *******************************************************************/
+N#define USED_TOUCH_WGP_PREDRV_MUX_SENSING				(YES)/*Pend Data*/
+N
+N#define USED_RAWDATA_TUNE_CALIBRATION					(NO)
+N#if USED_RAWDATA_TUNE_CALIBRATION
+X#if (NO)
+S	#define DEF_RAWDATA_TUNE_TYPE_AUTO						(1)
+S	#define DEF_RAWDATA_TUNE_TYPE_MANUAL					(2)
+S	#define RAWDATA_TUNE_CALIBRATION_TYPE					(DEF_RAWDATA_TUNE_TYPE_AUTO)
+S	#define USED_RAWDATA_HOPP_FRQ_CALIBRATION				(NO)
+S	#if (RAWDATA_TUNE_CALIBRATION_TYPE == DEF_RAWDATA_TUNE_TYPE_AUTO)
+S		#define RAWDATA_TUNE_AUTO_CALIBRATION_TARGET_VAL		(1900)
+S	#endif /* (RAWDATA_TUNE_CALIBRATION_TYPE == DEF_RAWDATA_TUNE_TYPE_AUTO) */
+N#endif /* USED_RAWDATA_TUNE_CALIBRATION */
+N#define USED_ROIC_AFE_LP_OPTION							(YES)
+N
+N#define USED_QUEUECOMMONDATA_SEND_Timer_Tick			(YES)
+N
+N#define USED_MNT_S3_MODE_FUNCTION						(NO)
+N#define S3_MODE_FRAME_RATE_Hz							(20)//Hz
+N#define S3_MODE_TOUCH_TIME_usec							(7000)//usec
+N#define USED_S3_POWER_INPUT_CHECK						(YES && USED_MNT_S3_MODE_FUNCTION)
+N#define USED_S3_SIGNAL_OUTPUT_CTRL						(YES && USED_MNT_S3_MODE_FUNCTION)
+N#define USED_S3_VDD_OE_INPUT_OUTPUT_CTRL				(YES && USED_MNT_S3_MODE_FUNCTION)
+N#define USED_S3_VDD_OE_INPUT_OUTPUT_ALWAYS_LOW_CTRL		(NO && USED_MNT_S3_MODE_FUNCTION)
+N#define TPIC_S3_VDD_OE_INPUT_OUTPUT_CTRL_START_CNT_THD	(4)
+N#define TPIC_S3_VDD_OE_INPUT_OUTPUT_CTRL_FRAME_CNT_THD	(40) //2 sec
+N#define USED_S3_PGAMMA_SW_I2C_CTRL						(YES && USED_MNT_S3_MODE_FUNCTION)
+N
+N#define USED_S3_WAKEUP_MOUSE_DEVICE						(NO)
+N#define USED_S3_WAKEUP_DEBUGING							(NO)
+N
+N#define USED_S3_MSPI_4MHz_OPERATION						(YES)
+N
+N#define USED_VTSP_ONLY_LOW_POWER						(NO)
+N#define USED_VTSP_ONLY_HOST_INTERFACE_OFF				(NO)
+N#define USED_TOUCH_SLEEP_CTRL_BY_HOST					(NO)
+N#if USED_TOUCH_SLEEP_CTRL_BY_HOST
+X#if (NO)
+S	#define DEF_TOUCH_SLEEP_CTRL_HOST_GPIO_TEST_TPEN		(YES) // For Test
+N#endif /* USED_TOUCH_SLEEP_CTRL_BY_HOST */
+N
+N#define USED_CHECK_TP_EN_PIN_IN_PT_TEST_ITEM			(YES)
+N
+N#define USED_PWM_FRQ_114KHz								(NO) // vFF.05
+N#define USED_PWM_FRQ_140KHz								(NO) // vFF.06
+N
+N#define USED_GET_REVERSE_CRC_VALUE						(0)
+N
+N/*******************************************************************
+N * MSB 8bit is Binary Type
+N *******************************************************************/
+N#if 1
+N	#define APP_VERSION					(0x0006) // base v00.07
+N#else
+S	#define APP_VERSION					(0xFF15) // For BOE
+S//	#define APP_VERSION					(0xF001) // For SE
+N#endif
+N
+N#define CONFIG_VERSION				(0x0001)
+N#define I2C_ADDRESS					(0x09)
+N#define HID_DESCRIPTOR_ADDRESS		(0x0001)
+N#define UNIQUE_APP_PID 				(0x9902)
+N
+N#define I2C_X_RESOLUTION			(32768)
+N#define I2C_Y_RESOLUTION			(32768)
+N
+N// For CRC Matching
+N#define APP_MEM_SIZE				(0xD3FA)//(80)//(0x137B)//(80)//(0x1F77)//(80)
+N#define CONFIG_MEM_SIZE				(0x5252)//(28)//(0xD198)//(28)//(0x7AFA)//(28)
+N
+N// 13.3"
+N// X, Y Physical Maximum
+N#define X_PHYSICAL_MAX				(34445) // (34.445 cm)
+N#define Y_PHYSICAL_MAX				(21528) // (21.528 cm)
+N
+N#define MODE_WDT				// WDT Mode Apply
+N//#define DC_BASE
+N#define MODE_I2C
+N
+N/* The Pen Intensity and Rawdata is broken when viewing using a tool.
+N * The Intensity and RawData is 2-Bytes, but I2C communication is 1-byte.
+N * Pen data and I2C Logging is async.
+N * If the data is updated immediately after sending the MSB using the I2C.
+N * LSB Data is sending update data. So, tool Is display Broken data
+N * If this define is applied, I2C is processed by 2bytes  */
+N#define USED_I2C_READ_DATA_UNIT_2BYTE		(YES & USED_PEN_MODE_OPERATION)
+N
+N#define ADD_TOUCH
+N#if USED_PEN_MODE_OPERATION
+X#if (NO)
+S	#define ADD_PEN
+N#endif /* USED_PEN_MODE_OPERATION */
+N
+N#define ADD_CUSTOM
+N#define USB_SELECTIVE_SUSPEND
+N//#define I2C_SELECTIVE_SUSPEND
+N
+N/*******************************************************************************************
+N *                       Algorithm Setting
+N *******************************************************************************************/
+N#if USED_PEN_MODE_OPERATION
+X#if (NO)
+S/*------------------ Pen Tilt Setting -----------------------------------------------------*/ 
+S#define TILT_ON 1		    			//Tilt Enable 
+S#ifdef TILT_ON
+S	#define TILT_OPCODE	1
+S	//#define DSP_SMOOTH_PASTPOS	1 
+S	#define TILT_SMOOTHING	1
+S	#define TILT_EDGE_FILTER		(NO)
+S	#define TILT_AREA_FILTER		(NO)
+S	//#define Pen2ReportMethod	2 //0 : All Original, 1 : Pen2 Prediction, 2 : Smoothing of Pen2 prediction, 3 : Pen2 Skip (180hz) 
+S	//#define FirstTiltWaitReport 1    //Report skip until correct tilt value
+S	#if (USED_PEN_PROTOCOL == PEN_PROTOCOL_MS_PEN)
+S		#define FirstTiltWaitReportMS 1    //Report skip until correct tilt value
+S		//#define TiltAccuracyTest 1
+S	#endif
+S	#define TiltBasedRingDelta				(NO)
+S	#define TiltDirecLimitFilter			(NO)
+S	#define TiltChangeLimitFilter			(NO)
+S	#define HighDeltaTiltSmoothCoefChange	(NO)
+S	#define TiltDirecLimitFilter 			(NO)
+S	#define TiltDeltaLimit_EN				(YES)
+S	#define TiltDeltaLimit_ADD				(YES)
+S	#define TiltMedianFilter				(NO)
+S	#define UseLastContact3x3				(NO)
+S	#define TiltArcSinLookUp_Num			(2)		// 0,1,2,3 : each table use, 3 < : all table use debug mode 
+S	#define TiltAdjustEn 					(NO)
+S#endif
+S/*-----------------------------------------------------------------------------------------*/ 
+S
+S/*-------------------- Pen Contact&Hover&Data Setting -------------------------------------*/  
+S//#define PenFingerSameLineNoiseException 1
+S//#define LongDisPointException	1
+S#define LocalFingerNoiseRemove 1				 //Local Finger Point remove near by pen point 
+S#define OrgPastPosInterpolation_OPCODE 3 		 //Org Pos Num 0:off, Max 3 
+S//#define SW_RATE_UP_EN					1		 // 1:300hz, 2:360hz, 3:420hz
+S//#define CalculateDeltaLocalSearch_OPCODE	1
+S#define ADAPTOR_NOISE_ALGO_EN			(NO)
+S#define AbnormalContactRemove_EN		(NO)
+S#define LOCAL_REBASE_ALGO_EN			(NO)	//	Local Mode Re-Baseline Algorithm On, HanCH
+S#define USED_DSPA_FUNC_FOR_PEN_SEARCH	(NO)	//	Local Pen Search Mode Phase & Delta Calculation On, HanCH
+S#define USED_DSPA_FUNC_FOR_PEN_LOCAL	(NO)	//	Local Pen Hover&Contact Mode Phase & Delta Calculation On, HanCH
+S#define CornerSmoothContact				(NO)//(YES)
+S#define IdealInterOnlyCorner 			(NO)//(YES)
+S#define DataAdaptiveContactTh_EN		(NO)
+S#define HoverDeltaMul_EN				(NO)
+S#define HIGH_HOVER_JITTER_REDUCE		(YES)
+S#define DeltaBaseNewEdgeCompen_SW		(YES)
+S#define PEN_CORNER_EXPEND_ADD			(YES)
+S#define CORNER_CoordiShift_WithTilt_ADD (NO)//(YES)
+S#define USED_PEN_PRESSURE_BRUSH_LEVEL_CTRL	(YES)
+S//#define PEN_FINGER_1TOUCH_REPORT		(YES)
+S//#define PEN_Latency_Test_ByFW			(YES)
+S#if (USED_PEN_PROTOCOL == PEN_PROTOCOL_MS_PEN)
+S	#define FingerAreaPenDeltaDelete 			(1)
+S#endif
+S/*-----------------------------------------------------------------------------------------*/
+N#endif /* #if USED_PEN_MODE_OPERATION */
+N
+N/*-------------------- Finger Setting -----------------------------------------------------*/ 
+N#define USED_DSPA_FUNC_FOR_FINGER			(YES)	//	Finger Mode DAP_A On, HanCH
+N#if USED_DSPA_FUNC_FOR_FINGER
+X#if (YES)
+S	#define USED_DSPA_FUNC_FOR_FINGER_LF		(NO)	//	Finger Mode DAP_A LineFilter On, HanCH
+S	#define USED_DSPA_FUNC_FOR_FINGER_CAL_DELTA	(YES)	//	Finger Mode DAP_A Delta Calculation On, HanCH
+N#endif
+N#define FINGER_LF_VER2_EN					(YES)
+N#define PALM_VER1_EN						(NO)
+N#define WinCertAssistance_En				(NO)
+N#define CPI_TEST_EN							(NO)
+N#define LGD_ERROR_FRAME_PROCESS_EN			(NO)
+N#define NORMALIZE_DELTA_EN					(NO)
+N#if (USED_PEN_PROTOCOL == PEN_PROTOCOL_MS_PEN)
+X#if ((PEN_PROTOCOL_WGP_PEN) == PEN_PROTOCOL_MS_PEN)
+N	#define BIG_FINGER_EDGE_EXPAND_ALGO_EN		(YES)
+N	#define BIG_FINGER_EDGE_ACC_TEST_ALGO_EN	(YES)
+N#else
+S	#define BIG_FINGER_EDGE_EXPAND_ALGO_EN		(YES)
+N#endif
+N#define VECTOR_PREDICTION_EN								(YES)
+N#define PalmCandidateTouchCut_EN							(YES)
+N#define PalmFirstDetectionShift								(YES)
+N#define ADAPTIVE_SEEDBASE				(NO)
+N#define DIAG_OFF						(NO || USED_RAWDATA_TUNE_CALIBRATION)
+N#define FAST_LF_EN						(NO)	//SW LineFilter Fast Process On //It must be NO, when DSP_A Finger Cal Delta define&parameter On, 201217 HanCH
+N#define LABEL_FAST_EN					(NO)	//label_SearchValidArea Fast Process On	1 : Delta Calculation&Labeling 1st Stage merge Off, 2 : Delta Calculation&Labeling 1st Stage merge On//It must be NO, when DSP_A Finger Cal Delta define&parameter On, 201217 HanCH
+N#if LABEL_FAST_EN
+X#if (NO)
+S	#define	ROW_IN_ARRAY 	8
+S	#define COL_IN_ARRAY	8
+S	#define ARRAY_ROW		(ROW_MAX/ROW_IN_ARRAY+1)
+S	#define ARRAY_COL		(COL_MAX/COL_IN_ARRAY+1)
+N#endif
+N#define FAST_SPLIT						(YES)	//Label Split Fast Process On
+N#define REMOVE_EDGE_EN 					(YES)
+N#define MULTI_EDGE_COEF_EN 				(YES)
+N//#define FINGER_Latency_Test_ByFW		(YES)
+N/*-----------------------------------------------------------------------------------------*/
+N
+N/*******************************************************************************************
+N *                       Operation Mode Setting
+N *******************************************************************************************/
+N
+N#define LHB_NUM								(16)
+N#if USED_IDLE_MODE_30Hz_CONTROL
+X#if (NO)
+S	#define LOCAL_IDLE_LHB_NUM				(20)
+S#elif USED_IDLE_MODE_20Hz_CONTROL
+X#elif (NO)
+S	#define LOCAL_IDLE_LHB_NUM				(30)
+N#else
+N	#define LOCAL_IDLE_LHB_NUM				(16)
+N#endif
+N
+N#define MAX_TOUCH_                      	(10)
+N#define MAX_KEY_                        	(4)
+N#define PAD_                            	(0)
+N
+N#define ROW_MAX								(48)
+N#define COL_MAX								(84)
+N#define FPITCH_X							(4.10)
+N#define FPITCH_Y							(4.49)
+N#define NI_ROW_MAX							(USED_IDLE_NI_SENSING_MUX_NUM*5)
+N
+N#define LOCAL_FINGER_1MUX_ROW_NUM			(5)
+N#define LOCAL_FINGER_1LHB_SCAN_MUX_NUM		(3)
+N
+N#define PEN_COORD_ROW_MAX					(5)
+N#define PEN_COORD_COL_MAX					(COL_MAX)
+N#define PEN_DATA_ROW_MAX					(PEN_COORD_ROW_MAX*6) // MS MPP Pen Data
+N#define PEN_DATA_ROW_MAX_2					(PEN_COORD_ROW_MAX*8) // Wacom AIT Pen Data
+N#define PEN_DATA_ROW_MAX_3					(PEN_COORD_ROW_MAX*7) // Wacom WGP Pen Data
+N
+N#define MUX_RANGE_SIZE	    				(2)
+N#define MAX_MUX_SIZE						(PEN_COORD_ROW_MAX)
+N#define MAX_MUX_HALF						(MAX_MUX_SIZE>>1)
+N#define MUX_MAX_ROW							(ROW_MAX - MAX_MUX_SIZE)
+N
+N
+N/***************************************************************************************************************************************
+N * platform_env.h
+N ***************************************************************************************************************************************/
+N//#define _USE_NOISE_INDEX_
+N#define _DV_SAMPLE_
+N
+N#define MSPI_START_VAL					(uint32_t)(BIT3|BIT2|BIT1|BIT0)
+N
+N#define SPI_DMY_LEN     				(2)
+N#define SRIC_PROTOCOL_RESET_COUNT   	(7)
+N#define READ_ALIGNED_BUF    			(0x0000)
+N
+N#define ROIC_ALIGNED_COL_LEN  			(21)//(12)//(14)
+N#define ROIC_ALIGNED_ROW_LEN  			(5)
+N
+N#define R0_COL_LEN						(11)
+N#define R0_ROW_LEN						(5)
+N
+N#define R1_COL_LEN						(10)
+N#define R1_ROW_LEN						(5)
+N
+N
+N#define MSPI_NUM                		(4)
+N#define SRIC_NUM                		(4)
+N
+N#define SM_NUM                  		(1)
+N
+N#define MSPI_ROW_MAX_MUX				(10)
+N#define FINGER_MUX_NUM              	(10)
+N#if USED_ESD_RECOVERY_SENSING_WITHOUT_MODULATION
+X#if (YES)
+S	#define FINGER_ESD_SCAN_MUX_NUM			(2)
+S	#define FINGER_ESD_SCAN_ROW_MAX_NUM		(10)
+N#endif
+N
+N#define FINGER_IDLE_NI_MUX_NUM          (USED_IDLE_NI_SENSING_MUX_NUM)
+N
+N#define MSPI_MSPEN_ALIGNED_COL_LEN  				(21)//(12)//(14)
+N#define MSPI_MSPEN_ALIGNED_ROW_LEN  				(5)
+N
+N#define MSPI_WACOMPEN_ALIGNED_COL_LEN  				(21)//(12)//(14)
+N#define MSPI_WACOMPEN_ALIGNED_ROW_LEN  				(5)
+N
+N#define MSPI_WGPPEN_ALIGNED_COL_LEN  				(21)//(12)//(14)
+N#define MSPI_WGPPEN_ALIGNED_ROW_LEN  				(5)
+N#define MSPI_WGPPEN_ALIGNED_DUMMY					(7)//(2)//(2)//(6)//(2)
+N
+N
+N#define SZ_MSPIBUF_REGISTER     			(SPI_DMY_LEN + 1)
+N#define SZ_MSPIBUF_MUXDATA      			(SPI_DMY_LEN + 5 + (ROIC_ALIGNED_COL_LEN * ROIC_ALIGNED_ROW_LEN))
+N//#define SZ_MSPIBUF_MUXDATA      			((ROIC_ALIGNED_COL_LEN * ROIC_ALIGNED_ROW_LEN))
+N//#define SZ_MSPIBUF_FINGER_FULL_FRAME		(SZ_MSPIBUF_MUXDATA * FINGER_MUX_NUM)
+N//#define SZ_MSPIBUF_FINGER_IDLE_FULL_FRAME   (SZ_MSPIBUF_MUXDATA * FINGER_IDLE_NI_MUX_NUM)
+N
+N#define LOCAL_FINGER_LAST_LHB				(PARTIAL_FINGER4)
+N
+N#if (USED_PEN_PROTOCOL == PEN_PROTOCOL_WGP_PEN)
+X#if ((PEN_PROTOCOL_WGP_PEN) == PEN_PROTOCOL_WGP_PEN)
+N	#define LOCAL_OP_LAST_LHB				(PARTIAL_PEN_DATA4)
+N#elif (USED_PEN_PROTOCOL == PEN_PROTOCOL_WGP_UHD_PEN)
+S	#define LOCAL_OP_LAST_LHB				(PARTIAL_PEN_COORD_DATA4)
+S#elif (USED_PEN_PROTOCOL == PEN_PROTOCOL_MS_PEN)
+S	#define LOCAL_OP_LAST_LHB				(PARTIAL_FINGER3)
+S#elif (USED_PEN_PROTOCOL == PEN_PROTOCOL_MSnWGP_PEN)
+S	#define LOCAL_OP_LAST_LHB				(PARTIAL_FINGER3) // For MPP2.5
+S	#define LOCAL_OP_2_LAST_LHB				(PARTIAL_PEN_DATA4) // For WGP
+N#endif /* (USED_PEN_PROTOCOL == PEN_PROTOCOL_WGP_PEN) */
+N
+N
+N#endif /* _INFORMATION_H_ */
+L 35 "..\..\Tool_BinCvt\BinToolApp\src\crc.c" 2
+N
+N
+Nstatic uint16_t CRC16Lut[] = {
+N	0x0000, 0x8005, 0x800F, 0x000A, 0x801B, 0x001E, 0x0014, 0x8011,
+N	0x8033, 0x0036, 0x003C, 0x8039, 0x0028, 0x802D, 0x8027, 0x0022,
+N	0x8063, 0x0066, 0x006C, 0x8069, 0x0078, 0x807D, 0x8077, 0x0072,
+N	0x0050, 0x8055, 0x805F, 0x005A, 0x804B, 0x004E, 0x0044, 0x8041,
+N	0x80C3, 0x00C6, 0x00CC, 0x80C9, 0x00D8, 0x80DD, 0x80D7, 0x00D2,
+N	0x00F0, 0x80F5, 0x80FF, 0x00FA, 0x80EB, 0x00EE, 0x00E4, 0x80E1,
+N	0x00A0, 0x80A5, 0x80AF, 0x00AA, 0x80BB, 0x00BE, 0x00B4, 0x80B1,
+N	0x8093, 0x0096, 0x009C, 0x8099, 0x0088, 0x808D, 0x8087, 0x0082,
+N	0x8183, 0x0186, 0x018C, 0x8189, 0x0198, 0x819D, 0x8197, 0x0192,
+N	0x01B0, 0x81B5, 0x81BF, 0x01BA, 0x81AB, 0x01AE, 0x01A4, 0x81A1,
+N	0x01E0, 0x81E5, 0x81EF, 0x01EA, 0x81FB, 0x01FE, 0x01F4, 0x81F1,
+N	0x81D3, 0x01D6, 0x01DC, 0x81D9, 0x01C8, 0x81CD, 0x81C7, 0x01C2,
+N	0x0140, 0x8145, 0x814F, 0x014A, 0x815B, 0x015E, 0x0154, 0x8151,
+N	0x8173, 0x0176, 0x017C, 0x8179, 0x0168, 0x816D, 0x8167, 0x0162,
+N	0x8123, 0x0126, 0x012C, 0x8129, 0x0138, 0x813D, 0x8137, 0x0132,
+N	0x0110, 0x8115, 0x811F, 0x011A, 0x810B, 0x010E, 0x0104, 0x8101,
+N	0x8303, 0x0306, 0x030C, 0x8309, 0x0318, 0x831D, 0x8317, 0x0312,
+N	0x0330, 0x8335, 0x833F, 0x033A, 0x832B, 0x032E, 0x0324, 0x8321,
+N	0x0360, 0x8365, 0x836F, 0x036A, 0x837B, 0x037E, 0x0374, 0x8371,
+N	0x8353, 0x0356, 0x035C, 0x8359, 0x0348, 0x834D, 0x8347, 0x0342,
+N	0x03C0, 0x83C5, 0x83CF, 0x03CA, 0x83DB, 0x03DE, 0x03D4, 0x83D1,
+N	0x83F3, 0x03F6, 0x03FC, 0x83F9, 0x03E8, 0x83ED, 0x83E7, 0x03E2,
+N	0x83A3, 0x03A6, 0x03AC, 0x83A9, 0x03B8, 0x83BD, 0x83B7, 0x03B2,
+N	0x0390, 0x8395, 0x839F, 0x039A, 0x838B, 0x038E, 0x0384, 0x8381,
+N	0x0280, 0x8285, 0x828F, 0x028A, 0x829B, 0x029E, 0x0294, 0x8291,
+N	0x82B3, 0x02B6, 0x02BC, 0x82B9, 0x02A8, 0x82AD, 0x82A7, 0x02A2,
+N	0x82E3, 0x02E6, 0x02EC, 0x82E9, 0x02F8, 0x82FD, 0x82F7, 0x02F2,
+N	0x02D0, 0x82D5, 0x82DF, 0x02DA, 0x82CB, 0x02CE, 0x02C4, 0x82C1,
+N	0x8243, 0x0246, 0x024C, 0x8249, 0x0258, 0x825D, 0x8257, 0x0252,
+N	0x0270, 0x8275, 0x827F, 0x027A, 0x826B, 0x026E, 0x0264, 0x8261,
+N	0x0220, 0x8225, 0x822F, 0x022A, 0x823B, 0x023E, 0x0234, 0x8231,
+N	0x8213, 0x0216, 0x021C, 0x8219, 0x0208, 0x820D, 0x8207, 0x0202
+N};
+N
+Nuint16_t Crc16WordCalc(const uint16_t *DataIn, uint32_t DataLen, uint16_t InitVal)
+N{
+N	uint32_t i;
+N	uint16_t CRCSum;
+N	uint8_t tempData;
+N
+N	CRCSum = InitVal;
+N	for (i = 0; i < DataLen; i += 2)
+N	{
+N		tempData = (uint8_t)((DataIn[i] >> 8) & 0xFF);
+N		CRCSum = (CRCSum << 8) ^ CRC16Lut[((CRCSum >> 8) & 0xFF) ^ tempData];
+N
+N		tempData = (uint8_t)(DataIn[i] & 0xFF);
+N		CRCSum = (CRCSum << 8) ^ CRC16Lut[((CRCSum >> 8) & 0xFF) ^ tempData];
+N	}
+N
+N	return CRCSum;
+N}
+N
+Nuint32_t GetCRCValue(const uint16_t * pFWBuf, uint32_t ulSize)
+N{
+N	uint32_t ulCRCValue;
+N
+N	ulCRCValue = Crc16WordCalc((const uint16_t*)&pFWBuf[0], (ulSize>>1), 0) | (Crc16WordCalc((const uint16_t*)&pFWBuf[1], (ulSize>>1), 0) << 16);
+N	ulCRCValue = ulCRCValue ^ 0xFFFFFFFF;
+N
+N	return ulCRCValue;
+N}
+N
+N#if USED_GET_REVERSE_CRC_VALUE
+X#if (0)
+Suint16_t GetCRC_PreviousCRCValue(uint16_t usOutputValue, uint16_t usInputValue)
+S{
+S	uint16_t ulTempCRCValue;
+S	uint16_t ulCRCValue;
+S	uint8_t tempData;
+S
+S	for(ulCRCValue = 0; ulCRCValue <= 0xFFFF; ulCRCValue++)
+S	{
+S		ulTempCRCValue = ulCRCValue;
+S		tempData = (uint8_t)((usInputValue >> 8) & 0xFF);
+S		ulTempCRCValue = (ulTempCRCValue << 8) ^ CRC16Lut[((ulTempCRCValue >> 8) & 0xFF) ^ tempData];
+S
+S		tempData = (uint8_t)(usInputValue & 0xFF);
+S		ulTempCRCValue = (ulTempCRCValue << 8) ^ CRC16Lut[((ulTempCRCValue >> 8) & 0xFF) ^ tempData];
+S
+S		ulTempCRCValue = ulTempCRCValue ^ 0xFFFF;
+S
+S		if(ulTempCRCValue == usOutputValue)
+S		{
+S			return ulCRCValue;
+S		}
+S	}
+S
+S	return 0;
+S}
+S
+Suint16_t GetCRC_CRCMatchingInputValue(uint16_t usPrevCRCValue, uint16_t usOutputValue)
+S{
+S	uint16_t ulTempCRCValue;
+S	uint16_t usInputValue;
+S	uint8_t tempData;
+S
+S	for(usInputValue = 0; usInputValue <= 0xFFFF; usInputValue++)
+S	{
+S		ulTempCRCValue = usPrevCRCValue;
+S		tempData = (uint8_t)((usInputValue >> 8) & 0xFF);
+S		ulTempCRCValue = (ulTempCRCValue << 8) ^ CRC16Lut[((ulTempCRCValue >> 8) & 0xFF) ^ tempData];
+S
+S		tempData = (uint8_t)(usInputValue & 0xFF);
+S		ulTempCRCValue = (ulTempCRCValue << 8) ^ CRC16Lut[((ulTempCRCValue >> 8) & 0xFF) ^ tempData];
+S
+S		ulTempCRCValue = ulTempCRCValue ^ 0xFFFF;
+S
+S		if(ulTempCRCValue == usOutputValue)
+S		{
+S			return usInputValue;
+S		}
+S	}
+S
+S	return 0;
+S}
+N#endif
+N
+N
+N
+N

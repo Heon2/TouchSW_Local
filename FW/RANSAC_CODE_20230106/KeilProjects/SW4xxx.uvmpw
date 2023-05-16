@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<ProjectWorkspace xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="project_mpw.xsd">
+
+  <SchemaVersion>1.0</SchemaVersion>
+
+  <Header>### uVision Project, (C) Keil Software</Header>
+
+  <WorkspaceName>WorkSpace</WorkspaceName>
+
+  <project>
+    <PathAndName>.\APP_SIMPLE_BOOT\APP_SIMPLE_BOOT.uvprojx</PathAndName>
+  </project>
+
+  <project>
+    <PathAndName>.\APPLICATION\APPLICATION.uvprojx</PathAndName>
+    <NodeIsActive>1</NodeIsActive>
+    <NodeIsExpanded>1</NodeIsExpanded>
+  </project>
+
+  <project>
+    <PathAndName>.\APPLICATION_USED_BOOT_NoTrim\APPLICATION_USED_BOOT_NoTrim.uvprojx</PathAndName>
+  </project>
+
+  <project>
+    <PathAndName>.\APPLICATION_USED_BOOT_Trim\APPLICATION_USED_BOOT_Trim.uvprojx</PathAndName>
+  </project>
+
+</ProjectWorkspace>

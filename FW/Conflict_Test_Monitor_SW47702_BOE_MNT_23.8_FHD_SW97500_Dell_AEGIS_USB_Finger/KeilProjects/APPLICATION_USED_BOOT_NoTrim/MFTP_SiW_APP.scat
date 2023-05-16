@@ -1,0 +1,60 @@
+; ***********************************************************
+; ******* Scatter-Loading Description File for MTLP  ********
+; ***********************************************************
+LOAD_REGION 0x00003000 0x0001C400 	; start to after bootloader 12K
+{
+;;	Code Flash Memory
+;;	Application(116K) : 0x00000000~0x0002000
+;;	APP_CODE 0x00003000 0x0001D000
+	APP_CODE 0x00003000 0x0001C400
+	{
+		*(VECTOR, +First)
+		startup.o
+		*(APP) ; Fixed!!
+	}
+	
+	APP_CODE2 +0 FIXED
+	{
+		*(InRoot$$Sections)
+		.ANY (+RO)
+	}
+	
+;;	System Memory
+;;	SRAM: 180KB (0x2D000) (64)KB + (64)KB + (52)KB
+	;App Used : 0x20000000~0x20027FFF
+	
+	;; SRAM1 : 12KB (0x03000) : used for bootloader download by USB
+	;;RW_SRAM1 0x20000000 0x00003000
+	;;{
+	;;	maloc_mem.o
+	;;}
+	
+	;; SRAM2 : 116KB (0x2A000) : 52KB + 64KB
+	;;RW_SRAM2 0x20003000 0x0001D000
+	;;RW_SRAM2 0x20003000 0x0001D000
+	;;{
+	;;	*(.data_head, +First)  ; Fixed!!
+	;;	.ANY (+RW +ZI)
+	;;}
+	
+	;; SRAM3 : 52KB (0x0D000) : 52KB
+	;;RW_SRAM3 0x20020000 0x0000D000
+	;;{
+	;;	algorithm_conf.o (+RW +ZI)
+	;;	memory_pool_local.o (+RW +ZI)
+	;;}
+	
+	;; SRAM1 : 64KB (0x03000) : used for bootloader download by USB
+	RW_SRAM1 0x20000000 0x00010000
+	{
+		algorithm_conf.o (+RW +ZI)
+		memory_pool_local.o (+RW +ZI)
+	}
+	
+	;; SRAM2 : 116KB (0x2A000) : 64KB + 52KB
+	RW_SRAM2 0x20010000 0x0001D000
+	{
+		*(.data_head, +First)  ; Fixed!!
+		.ANY (+RW +ZI)
+	}
+}
