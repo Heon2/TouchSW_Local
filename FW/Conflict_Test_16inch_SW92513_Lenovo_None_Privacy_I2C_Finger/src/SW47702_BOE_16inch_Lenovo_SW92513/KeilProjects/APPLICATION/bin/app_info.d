@@ -28,3 +28,17 @@
 .\bin\app_info.o: ..\..\Boot\boot_info.h
 .\bin\app_info.o: ..\..\Env\env_model_B/env_model.h
 .\bin\app_info.o: ..\..\Env\env_model_B/customer/FHD_92513_16_Lenovo_NonPrivacy/information.h
+.\bin\app_info.o: ..\..\Env\env_model_B/customer/FHD_92513_16_Lenovo_NonPrivacy/param_configset_algorithm_common.h
+.\bin\app_info.o: ..\..\Env\env_model_B/customer/FHD_92513_16_Lenovo_NonPrivacy/param_configset_algorithm_mode_wgp.h
+.\bin\app_info.o: ..\..\Env\env_model_B/customer/FHD_92513_16_Lenovo_NonPrivacy/param_configset_mspi.h
+.\bin\app_info.o: ..\..\Env\env_model_B/customer/FHD_92513_16_Lenovo_NonPrivacy/param_configset_pwmdrv.h
+.\bin\app_info.o: ..\..\Env\env_model_B/customer/FHD_92513_16_Lenovo_NonPrivacy/param_configset_roic.h
+.\bin\app_info.o: ..\..\Env\env_model_B/customer/FHD_92513_16_Lenovo_NonPrivacy/param_configset_roic_cr_tune.h
+.\bin\app_info.o: ..\..\Env\env_model_B/customer/FHD_92513_16_Lenovo_NonPrivacy/remap_table.h
+.\bin\app_info.o: ..\..\Env\env_model_B/customer/FHD_92513_16_Lenovo_NonPrivacy/gpio_define.h
+.\bin\app_info.o: ..\..\Env\env_types.h
+.\bin\app_info.o: ..\..\Module\module_types.h
+.\bin\app_info.o: ..\..\Hal\hal_types.h
+.\bin\app_info.o: ..\..\App\app_types.h
+.\bin\app_info.o: ..\..\Env\env_section_defines.h
+.\bin\app_info.o: ..\..\App\app_info.h

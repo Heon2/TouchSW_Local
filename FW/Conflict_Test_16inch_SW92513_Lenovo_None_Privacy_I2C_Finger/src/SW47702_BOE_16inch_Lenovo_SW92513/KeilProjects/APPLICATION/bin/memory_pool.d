@@ -28,3 +28,17 @@
 .\bin\memory_pool.o: ..\..\Boot\boot_info.h
 .\bin\memory_pool.o: ..\..\Env\env_model_B/env_model.h
 .\bin\memory_pool.o: ..\..\Env\env_model_B/customer/FHD_92513_16_Lenovo_NonPrivacy/information.h
+.\bin\memory_pool.o: ..\..\Env\env_model_B/customer/FHD_92513_16_Lenovo_NonPrivacy/param_configset_algorithm_common.h
+.\bin\memory_pool.o: ..\..\Env\env_model_B/customer/FHD_92513_16_Lenovo_NonPrivacy/param_configset_algorithm_mode_wgp.h
+.\bin\memory_pool.o: ..\..\Env\env_model_B/customer/FHD_92513_16_Lenovo_NonPrivacy/param_configset_mspi.h
+.\bin\memory_pool.o: ..\..\Env\env_model_B/customer/FHD_92513_16_Lenovo_NonPrivacy/param_configset_pwmdrv.h
+.\bin\memory_pool.o: ..\..\Env\env_model_B/customer/FHD_92513_16_Lenovo_NonPrivacy/param_configset_roic.h
+.\bin\memory_pool.o: ..\..\Env\env_model_B/customer/FHD_92513_16_Lenovo_NonPrivacy/param_configset_roic_cr_tune.h
+.\bin\memory_pool.o: ..\..\Env\env_model_B/customer/FHD_92513_16_Lenovo_NonPrivacy/remap_table.h
+.\bin\memory_pool.o: ..\..\Env\env_model_B/customer/FHD_92513_16_Lenovo_NonPrivacy/gpio_define.h
+.\bin\memory_pool.o: ..\..\Env\env_types.h
+.\bin\memory_pool.o: ..\..\Module\module_types.h
+.\bin\memory_pool.o: ..\..\Hal\hal_types.h
+.\bin\memory_pool.o: ..\..\App\app_types.h
+.\bin\memory_pool.o: ..\..\Env\env_section_defines.h
+.\bin\memory_pool.o: ..\..\Hal\memory_pool.h

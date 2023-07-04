@@ -7693,7 +7693,7 @@ void Call_DSP_B_Func(int index, int mode)
 						thisInfo->tCoord.tPos.tXY[0] = thisInfo->tCoord_local_dsp.tPos.tXY;
 						thisInfo->tCoord.tPos.vusS[0] = thisInfo->tCoord_local_dsp.tPos.vusS;
 						thisInfo->tCoord.tPos.vusR[0] = thisInfo->tCoord_local_dsp.tPos.vusR;
-						algorithm_PendTouchEvent();				
+						//algorithm_PendTouchEvent();				
 #endif
 						
 						if(thisModeConf->PenCoord.bHoverContactReport && mode==LOCAL_HOVER_MODE)

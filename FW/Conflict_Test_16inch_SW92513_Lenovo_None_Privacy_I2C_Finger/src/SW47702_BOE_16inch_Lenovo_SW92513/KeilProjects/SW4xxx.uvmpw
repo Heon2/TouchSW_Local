@@ -13,8 +13,6 @@
 
   <project>
     <PathAndName>.\APPLICATION\APPLICATION.uvprojx</PathAndName>
-    <NodeIsActive>1</NodeIsActive>
-    <NodeIsExpanded>1</NodeIsExpanded>
   </project>
 
   <project>
@@ -23,6 +21,7 @@
 
   <project>
     <PathAndName>.\APPLICATION_USED_BOOT_Trim\APPLICATION_USED_BOOT_Trim.uvprojx</PathAndName>
+    <NodeIsActive>1</NodeIsActive>
   </project>
 
 </ProjectWorkspace>

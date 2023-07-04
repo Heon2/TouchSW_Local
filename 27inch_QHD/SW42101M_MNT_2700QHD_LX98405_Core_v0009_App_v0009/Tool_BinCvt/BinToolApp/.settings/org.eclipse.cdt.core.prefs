@@ -1,0 +1,6 @@
+eclipse.preferences.version=1
+environment/project/cdt.managedbuild.config.gnu.cross.exe.debug.1947337385/PATH/delimiter=;
+environment/project/cdt.managedbuild.config.gnu.cross.exe.debug.1947337385/PATH/operation=replace
+environment/project/cdt.managedbuild.config.gnu.cross.exe.debug.1947337385/PATH/value=c\:\\DevEnv\\Mingw\\msys\\1.0\\bin\\;c\:\\DevEnv\\MinGW\\bin;${USERPROFILE}\\Tools
+environment/project/cdt.managedbuild.config.gnu.cross.exe.debug.1947337385/append=true
+environment/project/cdt.managedbuild.config.gnu.cross.exe.debug.1947337385/appendContributed=true

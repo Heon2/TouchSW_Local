@@ -524,8 +524,12 @@
 #define FAST_SPLIT						(YES)	//Label Split Fast Process On
 #define REMOVE_EDGE_EN 					(YES)
 #define MULTI_EDGE_COEF_EN 				(YES)
-#define WeightedConflict				(YES)	//heon
-#define ConflictTest					(YES)
+#define WeightedConflict				(NO)	//heon
+#define ConflictTest					(NO)
+
+#define INTERPOLATION_VER1_En			(NO)
+#define INTERPOLATION_VER2_En			(NO)
+#define INTERPOLATION_VER3_En			(NO)
 //#define FINGER_Latency_Test_ByFW		(YES)
 /*-----------------------------------------------------------------------------------------*/
 

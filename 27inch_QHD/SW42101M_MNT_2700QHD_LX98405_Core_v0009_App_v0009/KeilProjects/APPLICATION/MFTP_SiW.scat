@@ -1,0 +1,43 @@
+; ***********************************************************
+; ******* Scatter-Loading Description File for MTLP  ********
+; ***********************************************************
+; 128KB
+LOAD_REGION 0x00000000 0x00020000 
+{
+	;Code Memory
+	;FLASH: 128kB
+	;0x00000000~0x0001FFFF
+	CODE 0x00000000 0x00020000 
+	{
+		*.o (RESET, +First)
+		*(InRoot$$Sections)
+		;startup_asm.o
+		startup.o
+	}
+	;Code Memory
+	;SRAM: 64kB
+	;;0x10000000~0x1000FFFF
+	IBUS_SRAM 0x10000000 0x10000
+	{
+	;	*(.speedup_func)
+	;	.ANY (+RW +ZI)
+		.ANY (+RO) 
+	}
+	 
+	;System Memory
+	;SRAM: 160kB
+	;0x20000000~0x20027FFF 
+	RW_IRAM1 0x20000000 0x00020000
+	{  ; RW data    
+		.ANY (+RW +ZI)
+	} 
+	 
+	;System Memory
+	;MSPI SRAM: 64kB
+	;0x20020000~0x2002FFFF 
+	RW_IRAM4 0x20027000 0x00008800
+	{  ; RW data
+		param_config_fixed.o (+RW +ZI)
+	}
+
+} 

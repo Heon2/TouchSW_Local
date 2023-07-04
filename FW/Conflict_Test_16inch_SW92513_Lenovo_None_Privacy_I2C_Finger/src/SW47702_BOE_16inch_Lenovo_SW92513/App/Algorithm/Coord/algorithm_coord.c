@@ -238,6 +238,7 @@ uint8_t FixTouchNum = 0;
 uint8_t PrevMaxTouchNum = 0;
 void algorithm_coord_calc_pos(int mode)
 {
+	
 	int l;
 
 	tLabelInfo_t	*temp_label;
@@ -3182,8 +3183,8 @@ void algorithm_coord_interpolation_v02(uint8_t ver)
 		}
 	}
 	
-	algorithm_PendTouchEvent();
-	algorithm_coord_UpdatePosHistoryInfo();
+	//algorithm_PendTouchEvent();
+	//algorithm_coord_UpdatePosHistoryInfo();
 	
 	for (int l = 0; l < MAX_TOUCH_; l++)
 	{
@@ -4235,7 +4236,6 @@ void algorithm_coord_wacom_hover_test(int local_rs)
 	}
 }
 #endif
-
 void algorithm_coord_process(int mode)
 {
 	//Edge_Expand_Finger LYB_190109
@@ -4275,4 +4275,5 @@ void algorithm_coord_process(int mode)
 //		algorithm_coord_PostProcess(mode);
 //	else
 		algorithm_coord_PostProcess_1();
+
 }

@@ -1,0 +1,11 @@
+rd /s /q "APP_ForLGD\bin"
+rd /s /q "APP_ForLGD\list"
+rd /s /q "APP_ForLGD_Debug\bin"
+rd /s /q "APP_ForLGD_Debug\list"
+rd /s /q "APP_ForLGD_MakeLIB\bin"
+rd /s /q "APP_ForLGD_MakeLIB\list"
+rd /s /q "APPLICATION\bin"
+rd /s /q "APPLICATION\list"
+rd /s /q "APPLICATION_USEBOOT_16KB\bin"
+rd /s /q "APPLICATION_USEBOOT_16KB\list"
+

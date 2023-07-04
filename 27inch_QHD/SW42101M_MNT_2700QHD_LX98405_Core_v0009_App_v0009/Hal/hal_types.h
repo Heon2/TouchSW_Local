@@ -1,0 +1,177 @@
+/****************************************************************************************************//**
+ * Copyright (c) 2017 - 2025 SiliconWorks LIMITED
+ *
+ * file : hal_types.h
+ * created on : 17. 4. 2017
+ * Author : mhjang
+ *
+ * All rights reserved.
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ * - Redistributions of source code must retain the above copyright
+ *   notice, this list of conditions and the following disclaimer.
+ *   - Redistributions in binary form must reproduce the above copyright
+ *   notice, this list of conditions and the following disclaimer in the
+ *   documentation and/or other materials provided with the distribution.
+ * - Neither the name of SiW nor the names of its contributors may be used
+ *   to endorse or promote products derived from this software without
+ *   specific prior written permission.
+ * *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDERS AND CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *******************************************************************************************************/
+
+#ifndef _HAL_TYPES_H_
+#define _HAL_TYPES_H_
+
+
+typedef enum
+{
+	/*
+	 * Sub Sensing Mode
+	 */
+	SM_CHECK_ACTIVE = 0x1,
+	SM_CHECK_ACTIVE_FRQ_MAIN = 0x2, // Main Frequency
+	SM_CHECK_ACTIVE_FRQ_HOP1 = 0x4, // Hopping 1 Frequency
+	SM_CHECK_ACTIVE_FRQ_HOP2 = 0x8, // Hopping 2 Frequency
+	SM_CHECK_IDLE = 0x100,
+#if USED_LPWG_MODE_CONTROL
+	SM_CHECK_LPWG = 0x200,
+#endif /* USED_LPWG_MODE_CONTROL */
+	/*
+	 * Main Sensing Mode
+	 */
+	SM_CHECK_S3_MODE = 0x800,
+	SM_S3_ACTIVE_MODE = (SM_CHECK_ACTIVE | SM_CHECK_S3_MODE),
+	SM_S3_IDLE_MODE = (SM_CHECK_IDLE | SM_CHECK_S3_MODE),
+
+	SM_CHECK_FINGER_ONLY_MODE = 0x1000,
+	SM_FINGER_ONLY_ACTIVE_FRQ_MAIN_MODE = (SM_CHECK_ACTIVE | SM_CHECK_ACTIVE_FRQ_MAIN | SM_CHECK_FINGER_ONLY_MODE),
+	SM_FINGER_ONLY_ACTIVE_FRQ_HOP1_MODE = (SM_CHECK_ACTIVE | SM_CHECK_ACTIVE_FRQ_HOP1 | SM_CHECK_FINGER_ONLY_MODE),
+	SM_FINGER_ONLY_ACTIVE_FRQ_HOP2_MODE = (SM_CHECK_ACTIVE | SM_CHECK_ACTIVE_FRQ_HOP2 | SM_CHECK_FINGER_ONLY_MODE),
+	SM_FINGER_ONLY_IDLE_MODE = (SM_CHECK_IDLE | SM_CHECK_FINGER_ONLY_MODE),
+#if USED_LPWG_MODE_CONTROL
+	SM_FINGER_ONLY_LPWG_MODE = (SM_CHECK_LPWG | SM_CHECK_FINGER_ONLY_MODE),
+#endif /* USED_LPWG_MODE_CONTROL */
+
+	SM_CHECK_FINGER_PEN_SEARCH_MODE = 0x2000,
+	SM_FINGER_PEN_SEARCH_ACTIVE_FRQ_MAIN_MODE = (SM_CHECK_ACTIVE | SM_CHECK_ACTIVE_FRQ_MAIN | SM_CHECK_FINGER_PEN_SEARCH_MODE),
+	SM_FINGER_PEN_SEARCH_ACTIVE_FRQ_HOP1_MODE = (SM_CHECK_ACTIVE | SM_CHECK_ACTIVE_FRQ_HOP1 | SM_CHECK_FINGER_PEN_SEARCH_MODE),
+	SM_FINGER_PEN_SEARCH_ACTIVE_FRQ_HOP2_MODE = (SM_CHECK_ACTIVE | SM_CHECK_ACTIVE_FRQ_HOP2 | SM_CHECK_FINGER_PEN_SEARCH_MODE),
+	SM_FINGER_PEN_SEARCH_IDLE_MODE = (SM_CHECK_IDLE | SM_CHECK_FINGER_PEN_SEARCH_MODE),
+
+	SM_CHECK_FINGER_PEN_MODE = 0x4000,
+	SM_CHECK_FINGER_PEN_HOVER_MODE = 0x8000,
+	SM_FINGER_PEN_ACTIVE_MODE = (SM_CHECK_ACTIVE | SM_CHECK_FINGER_PEN_MODE),
+	SM_FINGER_PEN_IDLE_MODE = (SM_CHECK_IDLE | SM_CHECK_FINGER_PEN_MODE),
+	SM_FINGER_PEN_HOVER_ACTIVE_MODE = (SM_CHECK_ACTIVE | SM_CHECK_FINGER_PEN_MODE | SM_CHECK_FINGER_PEN_HOVER_MODE),
+	SM_FINGER_PEN_HOVER_IDLE_MODE = (SM_CHECK_IDLE | SM_CHECK_FINGER_PEN_MODE | SM_CHECK_FINGER_PEN_HOVER_MODE),
+
+	SM_SENSING_MODE_LIMIT = 0xFFFF
+
+} eSENSING_MODE_t;
+
+typedef enum
+{
+	SM_CHANGE_COMPLETE,
+	SM_CHANGE_IDLE_MODE,
+#if USED_LPWG_MODE_CONTROL
+	SM_CHANGE_LPWG_MODE,
+#endif /* USED_LPWG_MODE_CONTROL */
+	SM_CHANGE_ACTIVE_FRQ_MAIN_MODE,
+	SM_CHANGE_ACTIVE_FRQ_HOP1_MODE,
+	SM_CHANGE_ACTIVE_FRQ_HOP2_MODE,
+//	SM_CHANGE_ACTIVE_MODE,
+//	SM_CHANGE_S3_MODE,
+	SM_CHANGE_FINGER_ONLY_MODE,
+	SM_CHANGE_FINGER_PEN_SEARCH_MODE,
+	SM_CHANGE_FINGER_PEN_MODE,
+
+	SM_CHANGE_SENSING_MODE_LIMIT = 0xFF
+
+} eSENSING_CHANGE_MODE_t;
+
+#define IS_S3_MODE(m)						(m & SM_CHECK_S3_MODE)					/* All Mode */
+#define IS_FINGER_ONLY_MODE(m)				(m & SM_CHECK_FINGER_ONLY_MODE)			/* All Mode */
+#define IS_FINGER_PEN_SEARCH_MODE(m)		(m & SM_CHECK_FINGER_PEN_SEARCH_MODE)	/* All Mode */
+#define IS_FINGER_PEN_MODE(m)				(m & SM_CHECK_FINGER_PEN_MODE)			/* Partial Mode */
+#define IS_FINGER_PEN_MODE_HOVER(m)			(m & SM_CHECK_FINGER_PEN_HOVER_MODE)	/* Partial Mode */
+
+#define IS_ACTIVE_MODE(m)					(m & SM_CHECK_ACTIVE)
+#define IS_ACTIVE_MODE_FRQ_MAIN(m)			(m & SM_CHECK_ACTIVE_FRQ_MAIN)
+#define IS_ACTIVE_MODE_FRQ_HOP1(m)			(m & SM_CHECK_ACTIVE_FRQ_HOP1)
+#define IS_ACTIVE_MODE_FRQ_HOP2(m)			(m & SM_CHECK_ACTIVE_FRQ_HOP2)
+#define IS_IDLE_MODE(m)						(m & SM_CHECK_IDLE)
+#if USED_LPWG_MODE_CONTROL
+#define IS_LPWG_MODE(m)						(m & SM_CHECK_LPWG)
+#endif /* USED_LPWG_MODE_CONTROL */
+
+typedef enum
+{
+	MSPI_OP_MODE_EVERY_MUX,
+	MSPI_OP_MODE_EVERY_FRAME,
+
+} eMSPIOperationMode_t;
+
+typedef enum
+{
+	BASELINE_TYPE_FULL,
+	BASELINE_TYPE_NI
+
+} eBaseImageType_t;
+
+typedef enum
+{
+	NORMAL_OPER = 0,
+	IDLE_READY,
+	IDLE_OPER,
+	IDLE_END
+
+} eIdleState_t;
+
+typedef struct
+{
+	/*
+	 * MSPI
+	 */
+	__IO uint32_t ulMSPIIntrCnt;
+	__IO uint32_t ulMSPIDone;
+
+	/*
+	 * PWM
+	 */
+	__IO uint32_t ulVSyncFlag;
+	__IO uint32_t ulTSyncInBothEdgeCnt;
+	__IO uint32_t ulTSyncInFallingCnt;
+	__IO uint32_t ulTSyncInRisingCnt;
+
+	/*
+	 * Timer
+	 */
+
+	/*
+	 * GPIO
+	 */
+
+	/*
+	 * Frame
+	 */
+	__IO uint32_t ulInitFirstFrame;
+	__IO uint32_t ulFrameCnt;
+	__IO uint32_t ulErrorFrame;
+
+} tHalInterruptHandle_t;
+
+
+
+
+#endif /* _HAL_TYPES_H_ */

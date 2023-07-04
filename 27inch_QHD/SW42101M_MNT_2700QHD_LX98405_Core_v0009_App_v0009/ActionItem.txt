@@ -1,0 +1,11 @@
+1. Interpolation된 좌표 위치 수정(win인증 fail)
+2. Edge 좌표 튜닝
+   - point touch시 edge쪽으로 끌려가는 현상 개선
+   - 현재 알고리즘에서 튜닝으로 가능한지 확인
+   - 불가능하다면 알고리즘 개선 작업 진행
+3. Win인증 툴에서 report rate 테스트해보고 실패 시 원인 분석
+4. Interpolation 껐을 때 좌표 튀는 원인 분석
+5. Finger separation
+6. Extend touch 구현 3~5frame
+   - Drawing 끊김 보완
+   - Finger separation 성능을 보완해줄 것으로 예상

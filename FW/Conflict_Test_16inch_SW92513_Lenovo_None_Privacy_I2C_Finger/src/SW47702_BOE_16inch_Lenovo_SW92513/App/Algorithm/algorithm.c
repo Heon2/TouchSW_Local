@@ -1043,8 +1043,10 @@ extern int HID_x[];
 extern int HID_y[];
 extern void protocol_hid_PushTouchEvent(const uSWIPTouchItem_t* _kptItem);
 //extern uint8_t	g_ConnectedDevice;
+
 void algorithm_PendTouchEvent(void)
 {
+	
 	int i;
 	int distX, distY;
 	tXY_t pos, old_pos;
@@ -1124,6 +1126,7 @@ static uint16_t NonTouchCnt = 0;
 				thisInfo->tCoord.tPos.vusS[i] = 0;
 				thisInfo->tCoord.cScreenDebCnt[i] = 0;
 			}
+			
 		}
 	}
 	#endif
@@ -2596,8 +2599,13 @@ bool_t algorithm_Check_Mux_Delta(uint8_t _mux_num, uint8_t _col, uint16_t _delta
 }
 #endif /* USED_ESD_RECOVERY_GHOST_TOUCH_DELTA_PATTERN */
 
+bool_t hz60 = YES;
+
 bool_t algorithm_process(uint8_t mode)
 {
+	if(hz60) hz60 = NO;
+	else	hz60 = YES;
+	
 	bool_t bIsRecalState = NO;
 	eSENSING_MODE_t eSensingMode;
 	eSensingMode = HAL_GetSensingMode();
@@ -2644,9 +2652,9 @@ bool_t algorithm_process(uint8_t mode)
 		if(ucInterpolation_Ver == 2 || ucInterpolation_Ver == 3)
 		{
 	#if (PEN_FINGER_1TOUCH_REPORT == NO)
-			algorithm_PendTouchEvent();
+			//algorithm_PendTouchEvent();
 	#endif
-			algorithm_coord_UpdatePosHistoryInfo();
+			//algorithm_coord_UpdatePosHistoryInfo();
 		}
 #endif
 		
@@ -2657,9 +2665,9 @@ bool_t algorithm_process(uint8_t mode)
 		if(ucInterpolation_Ver == 1)
 		{
 	#if (PEN_FINGER_1TOUCH_REPORT == NO)
-			algorithm_PendTouchEvent();
+			//if(hz60)	algorithm_PendTouchEvent();
 	#endif
-			algorithm_coord_UpdatePosHistoryInfo();
+			//if(hz60)	algorithm_coord_UpdatePosHistoryInfo();
 		}
 #endif
 	}
@@ -2950,18 +2958,19 @@ bool_t algorithm_process(uint8_t mode)
 	#endif
 	#if (PEN_FINGER_1TOUCH_REPORT == NO)
 #if (DEF_ESD_RECOVERY_CHECK_CURRENT_FRAME_RAWDATA_STUCK || USED_ESD_RECOVERY_GHOST_TOUCH_DELTA_PATTERN)
-			if (!gbSkipTouch)
-				algorithm_PendTouchEvent();
+			if (!gbSkipTouch){
+				if(hz60)	algorithm_PendTouchEvent();
+			}
 			else
 			{
 				gbSkipTouch = NO;
 				gusSkipTouchCnt++;
 			}
 #else /* (DEF_ESD_RECOVERY_CHECK_CURRENT_FRAME_RAWDATA_STUCK || USED_ESD_RECOVERY_GHOST_TOUCH_DELTA_PATTERN) */
-			algorithm_PendTouchEvent();
+//			if(hz60)	algorithm_PendTouchEvent();
 #endif /* (DEF_ESD_RECOVERY_CHECK_CURRENT_FRAME_RAWDATA_STUCK || USED_ESD_RECOVERY_GHOST_TOUCH_DELTA_PATTERN) */
 	#endif
-			algorithm_coord_UpdatePosHistoryInfo();
+			if(hz60)	algorithm_coord_UpdatePosHistoryInfo();
 		}
 #endif /* !USED_DO_NOT_FINGER_TOUCH_REPORT */
 		
@@ -2992,8 +3001,8 @@ bool_t algorithm_process_S3(void)
 	if(thisInfo->tS3DeltaInfo.bIsSendResumeSignal == YES && g_RemoteWakeup == 0)
 	{
 #if !USED_S3_WAKEUP_DEBUGING
-		algorithm_PendTouchEvent();
-		algorithm_coord_UpdatePosHistoryInfo();
+		//algorithm_PendTouchEvent();
+		//algorithm_coord_UpdatePosHistoryInfo();
 		algorithm_baseline_tracking_continuous_S3();
 #endif
 	}
