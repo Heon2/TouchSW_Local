@@ -34,9 +34,9 @@ void sinmi()
 ////////////////////////////////////////////////////////////
 // 인피니티 스펠
 ////////////////////////////////////////////////////////////
-const char infinity_command = KEY_INSERT;  // 스인미
-unsigned long infinity_count;  // 스인미 쿨타임 계산 변수
-long infinity_rand_sec;        // 스인미 쿨타임 랜덤 배정 변수
+const char infinity_command = KEY_F1;  // 인피니티
+unsigned long infinity_count;  // 인피니티 쿨타임 계산 변수
+long infinity_rand_sec;        // 인피니티 쿨타임 랜덤 배정 변수
 const long infinity_cooltime_min = 130000;
 const long infinity_cooltime_max = 150000;
 
@@ -54,19 +54,19 @@ void infinity()
 
 
 ////////////////////////////////////////////////////////////
-// 인피니티 스펠
+// 매서풀
 ////////////////////////////////////////////////////////////
-const char infinity_command = KEY_INSERT;  // 스인미
-unsigned long infinity_count;  // 스인미 쿨타임 계산 변수
-long infinity_rand_sec;        // 스인미 쿨타임 랜덤 배정 변수
-const long infinity_cooltime_min = 130000;
-const long infinity_cooltime_max = 150000;
+const char magic_command = KEY_F2;  // 매서풀
+unsigned long magic_count;  // 매서풀 쿨타임 계산 변수
+long magic_rand_sec;        // 매서풀 쿨타임 랜덤 배정 변수
+const long magic_cooltime_min = 190000;
+const long magic_cooltime_max = 230000;
 
-void infinity()
+void magic()
 {
-    Keyboard.press(infinity_command);      // PRESS infinity
+    Keyboard.press(magic_command);      // PRESS 매서풀
     random_delay(100, 150);
-    Keyboard.release(infinity_command);
+    Keyboard.release(magic_command);
     random_delay(13, 30);
 }
 ////////////////////////////////////////////////////////////
@@ -76,25 +76,105 @@ void infinity()
 
 
 ////////////////////////////////////////////////////////////
-// 인피니티 스펠
+// 그여축
 ////////////////////////////////////////////////////////////
-const char infinity_command = KEY_INSERT;  // 스인미
-unsigned long infinity_count;  // 스인미 쿨타임 계산 변수
-long infinity_rand_sec;        // 스인미 쿨타임 랜덤 배정 변수
-const long infinity_cooltime_min = 130000;
-const long infinity_cooltime_max = 150000;
+const char grandis_command = KEY_F3;  // 그여축
+unsigned long grandis_count;  // 그여축 쿨타임 계산 변수
+long grandis_rand_sec;        // 그여축 쿨타임 랜덤 배정 변수
+const long grandis_cooltime_min = 250000;
+const long grandis_cooltime_max = 300000;
 
-void infinity()
+void grandis()
 {
-    Keyboard.press(infinity_command);      // PRESS infinity
+    Keyboard.press(grandis_command);      // PRESS 그여축
     random_delay(100, 150);
-    Keyboard.release(infinity_command);
+    Keyboard.release(grandis_command);
     random_delay(13, 30);
 }
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////
 
+
+
+////////////////////////////////////////////////////////////
+// 로디드 다이스
+////////////////////////////////////////////////////////////
+const char dice_command = '1';  // 다이스
+unsigned long dice_count;  // 다이스 쿨타임 계산 변수
+long dice_rand_sec;        // 다이스 쿨타임 랜덤 배정 변수
+const long dice_cooltime_min = 250000;
+const long dice_cooltime_max = 300000;
+
+void dice()
+{
+    Keyboard.press(dice_command);      // PRESS 다이스
+    random_delay(100, 150);
+    Keyboard.release(dice_command);
+    random_delay(13, 30);
+}
+////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////
+
+
+
+////////////////////////////////////////////////////////////
+// 경험치 도핑 : 경쿠, 경뿌, 익스골드, 경축비
+////////////////////////////////////////////////////////////
+const char exp0_command = '7';  // 경쿠
+const char exp1_command = '8';  // 경뿌
+const char exp2_command = '9';  // 익스골드
+const char exp3_command = '0';  // 경축비
+unsigned long exp_count;  // 도핑 쿨타임 계산 변수
+long exp_rand_sec;        // 다이스 쿨타임 랜덤 배정 변수
+const long exp_cooltime_min = 1820000;  //30분 20초
+const long exp_cooltime_max = 1830000;  //30분 30초
+
+void exp()
+{
+    Keyboard.press(exp0_command);      // PRESS 경쿠
+    random_delay(100, 150);
+    Keyboard.release(exp0_command);
+    random_delay(13, 30);
+    Keyboard.press(exp1_command);      // PRESS 경뿌
+    random_delay(100, 150);
+    Keyboard.release(exp1_command);
+    random_delay(13, 30);
+    Keyboard.press(exp2_command);      // PRESS 익스골드
+    random_delay(100, 150);
+    Keyboard.release(exp2_command);
+    random_delay(13, 30);
+    Keyboard.press(exp3_command);      // PRESS 경축비
+    random_delay(100, 150);
+    Keyboard.release(exp3_command);
+    random_delay(13, 30);
+}
+////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////
+
+
+
+////////////////////////////////////////////////////////////
+// 재획비
+////////////////////////////////////////////////////////////
+const char exp120_command = '1';  // 재획비
+unsigned long exp120_count;  // 재획비 쿨타임 계산 변수
+long exp120_rand_sec;        // 재획비 쿨타임 랜덤 배정 변수
+const long exp120_cooltime_min = 7200000;
+const long exp120_cooltime_max = 7260000;
+
+void exp120()
+{
+    Keyboard.press(exp120_command);      // PRESS 재획비
+    random_delay(100, 150);
+    Keyboard.release(exp120_command);
+    random_delay(13, 30);
+}
+////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////
 
 void random_delay(int boundary_1, int boundary_2)
 {
