@@ -32,68 +32,25 @@ void sinmi()
 
 
 ////////////////////////////////////////////////////////////
-// 인피니티 스펠
+// 트랜스폼 스펠
 ////////////////////////////////////////////////////////////
-const char infinity_command = KEY_F1;  // 인피니티
-unsigned long infinity_count;  // 인피니티 쿨타임 계산 변수
-long infinity_rand_sec;        // 인피니티 쿨타임 랜덤 배정 변수
-const long infinity_cooltime_min = 130000;
-const long infinity_cooltime_max = 150000;
+const char transform_command = '`';  // transform
+unsigned long transform_count;  // transform 쿨타임 계산 변수
+long transform_rand_sec;        // transform 쿨타임 랜덤 배정 변수
+const long transform_cooltime_min = 185000;
+const long transform_cooltime_max = 200000;
 
-void infinity()
+void transform()
 {
-    Keyboard.press(infinity_command);      // PRESS infinity
+    Keyboard.press(transform_command);      // PRESS transform
     random_delay(100, 150);
-    Keyboard.release(infinity_command);
+    Keyboard.release(transform_command);
     random_delay(13, 30);
 }
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////
 
-
-
-////////////////////////////////////////////////////////////
-// 매서풀
-////////////////////////////////////////////////////////////
-const char magic_command = KEY_F2;  // 매서풀
-unsigned long magic_count;  // 매서풀 쿨타임 계산 변수
-long magic_rand_sec;        // 매서풀 쿨타임 랜덤 배정 변수
-const long magic_cooltime_min = 190000;
-const long magic_cooltime_max = 230000;
-
-void magic()
-{
-    Keyboard.press(magic_command);      // PRESS 매서풀
-    random_delay(100, 150);
-    Keyboard.release(magic_command);
-    random_delay(13, 30);
-}
-////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////
-
-
-
-////////////////////////////////////////////////////////////
-// 그여축
-////////////////////////////////////////////////////////////
-const char grandis_command = KEY_F3;  // 그여축
-unsigned long grandis_count;  // 그여축 쿨타임 계산 변수
-long grandis_rand_sec;        // 그여축 쿨타임 랜덤 배정 변수
-const long grandis_cooltime_min = 250000;
-const long grandis_cooltime_max = 300000;
-
-void grandis()
-{
-    Keyboard.press(grandis_command);      // PRESS 그여축
-    random_delay(100, 150);
-    Keyboard.release(grandis_command);
-    random_delay(13, 30);
-}
-////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////
 
 
 
@@ -159,19 +116,19 @@ void exp()
 ////////////////////////////////////////////////////////////
 // 재획비
 ////////////////////////////////////////////////////////////
-const char exp120_command = '1';  // 재획비
-unsigned long exp120_count;  // 재획비 쿨타임 계산 변수
-long exp120_rand_sec;        // 재획비 쿨타임 랜덤 배정 변수
-const long exp120_cooltime_min = 7200000;
-const long exp120_cooltime_max = 7260000;
+// const char exp120_command = '1';  // 재획비
+// unsigned long exp120_count;  // 재획비 쿨타임 계산 변수
+// long exp120_rand_sec;        // 재획비 쿨타임 랜덤 배정 변수
+// const long exp120_cooltime_min = 7210000;   // 2시간 10초
+// const long exp120_cooltime_max = 7260000;   // 2시간 1분
 
-void exp120()
-{
-    Keyboard.press(exp120_command);      // PRESS 재획비
-    random_delay(100, 150);
-    Keyboard.release(exp120_command);
-    random_delay(13, 30);
-}
+// void exp120()
+// {
+//     Keyboard.press(exp120_command);      // PRESS 재획비
+//     random_delay(100, 150);
+//     Keyboard.release(exp120_command);
+//     random_delay(13, 30);
+// }
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////
@@ -250,16 +207,25 @@ void setup()
   echo_mode = true; // 시리얼 모니터에 마우스, 키보드 신호 출력
   attachInterrupt(BTN1, stop_isr, RISING);
   attachInterrupt(BTN2, pause_isr, RISING);
+
   sinmi_count = millis();
+  transform_count = millis();
+  dice_count = millis();
+  exp_count = millis();
+  //exp120_count = millis();
+
   sinmi_rand_sec = random(sinmi_cooltime_min, sinmi_cooltime_max);
+  transform_rand_sec = random(transform_cooltime_min, transform_cooltime_max);
+  dice_rand_sec = random(dice_cooltime_min, dice_cooltime_max);
+  exp_rand_sec = random(exp_cooltime_min, exp_cooltime_max);
+  //exp120_rand_sec = random(exp120_cooltime_min, exp120_cooltime_max);
 
   ///////////////////////////////////////////////////////////
   // 레오나르도의 setup의 내용을 아래에 추가하세요
   ///////////////////////////////////////////////////////////
 }
 
-int SPECTOR_MACRO_FUNCTION_NUM = 9; //  스펙터 매크로 개수
-int LEF_MACRO_FUNCTION_NUM = 9; // 레프 매크로 개수
+int MACRO_FUNCTION_NUM = 9; // 매크로 개수
 
 void loop()
 {
@@ -268,8 +234,7 @@ void loop()
   ///////////////////////////////////////////////////////////
   CHECK_STOP();
   
-  spector_random_macro(SPECTOR_MACRO_FUNCTION_NUM);   // 랜덤으로 스팩터 매크로 함수 실행
-  lef_random_macro(LEF_MACRO_FUNCTION_NUM);         // 랜덤으로 레프 매크로 함수 실행
+  random_macro(SPECTOR_MACRO_FUNCTION_NUM);   // 랜덤으로 매크로 함수 실행
 
   // 스인미 실행 체크
   if(( millis() - sinmi_count ) > sinmi_rand_sec )
@@ -279,39 +244,57 @@ void loop()
       sinmi_count = millis();
       CHECK_STOP();
   }
-  Keyboard.releaseAll();
+  // transform 실행 체크
+  if(( millis() - transform_count ) > transform_rand_sec )
+  {
+      transform();
+      transform_rand_sec = random(transform_cooltime_min, transform_cooltime_max);
+      transform_count = millis();
+      CHECK_STOP();
+  }
+  // 다이스 실행 체크
+  if(( millis() - sinmi_count ) > dice_rand_sec )
+  {
+      dice();
+      dice_rand_sec = random(dice_cooltime_min, dice_cooltime_max);
+      dice_count = millis();
+      CHECK_STOP();
+  }
+  // exp도핑 실행 체크
+  if(( millis() - sinmi_count ) > exp_rand_sec )
+  {
+      exp();
+      exp_rand_sec = random(exp_cooltime_min, exp_cooltime_max);
+      exp_count = millis();
+      CHECK_STOP();
+  }
+  // // 재획비 실행 체크
+  // if(( millis() - sinmi_count ) > exp120_rand_sec )
+  // {
+  //     exp120();
+  //     exp120_rand_sec = random(exp120_cooltime_min, exp120_cooltime_max);
+  //     exp120_count = millis();
+  //     CHECK_STOP();
+  // }
+  // Keyboard.releaseAll();
 
 }
 
-void spector_random_macro(int num)
+void random_macro(int num)
 {
-  int specter_random_factor = random(num);
+  int random_factor = random(num);
 
-  if ( specter_random_factor == 0 ) specter_macro_code0();
-  if ( specter_random_factor == 1 ) specter_macro_code1();
-  if ( specter_random_factor == 2 ) specter_macro_code2();
-  if ( specter_random_factor == 3 ) specter_macro_code3();
-  if ( specter_random_factor == 4 ) specter_macro_code4();
-  if ( specter_random_factor == 5 ) specter_macro_code5();
-  if ( specter_random_factor == 6 ) specter_macro_code6();
-  if ( specter_random_factor == 7 ) specter_macro_code7();
-  if ( specter_random_factor == 8 ) specter_macro_code8();
+  if ( random_factor == 0 ) macro_code0();
+  if ( random_factor == 1 ) macro_code1();
+  if ( random_factor == 2 ) macro_code2();
+  if ( random_factor == 3 ) macro_code3();
+  if ( random_factor == 4 ) macro_code4();
+  if ( random_factor == 5 ) macro_code5();
+  if ( random_factor == 6 ) macro_code6();
+  if ( random_factor == 7 ) macro_code7();
+  if ( random_factor == 8 ) macro_code8();
 }
 
-void lef_random_macro(int num)
-{
-  int lef_random_factor = random(num);
-
-  if ( lef_random_factor == 0 ) lef_macro_code0();
-  if ( lef_random_factor == 1 ) lef_macro_code1();
-  if ( lef_random_factor == 2 ) lef_macro_code2();
-  if ( lef_random_factor == 3 ) lef_macro_code3();
-  if ( lef_random_factor == 4 ) lef_macro_code4();
-  if ( lef_random_factor == 5 ) lef_macro_code5();
-  if ( lef_random_factor == 6 ) lef_macro_code6();
-  if ( lef_random_factor == 7 ) lef_macro_code7();
-  if ( lef_random_factor == 8 ) lef_macro_code8();
-}
 //###########################################
 //###    MACRO START    #####################
 //###########################################
@@ -494,80 +477,43 @@ CHECK_STOP();
 //###########################################
 //###########################################
 
-void specter_macro_code0()
+void macro_code0()
 {
 
 }
-void specter_macro_code1()
+void macro_code1()
 {
   
 }
-void specter_macro_code2()
+void macro_code2()
 {
   
 }
-void specter_macro_code3()
+void macro_code3()
 {
   
 }
-void specter_macro_code4()
+void macro_code4()
 {
   
 }
-void specter_macro_code5()
+void macro_code5()
 {
   
 }
-void specter_macro_code6()
+void macro_code6()
 {
   
 }
-void specter_macro_code7()
+void macro_code7()
 {
   
 }
-void specter_macro_code8()
+void macro_code8()
 {
   
 }
-void specter_macro_code9()
-{
-  
-}
-
-void lef_macro_code0()
-{
-  
-}
-void lef_macro_code1()
-{
-  
-}
-void lef_macro_code2()
-{
-  
-}
-void lef_macro_code3()
-{
-  
-}
-void lef_macro_code4()
-{
-  
-}
-void lef_macro_code5()
-{
-  
-}
-void lef_macro_code6()
-{
-  
-}
-void lef_macro_code7()
-{
-  
-}
-void lef_macro_code8()
+void macro_code9()
 {
   
 }
